@@ -4,6 +4,8 @@
 ---
 
 ## 📌 Template A.2 — Problem Statement Builder  
+**Nama Peneliti** : raavfy azzaqee  
+**Tanggal** : 19 April 2026  
 
 ### Domain & Konteks
 - **Domain**  : Machine Learning / Sistem Prediksi  
