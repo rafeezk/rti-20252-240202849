@@ -80,25 +80,25 @@ Jika variabel tidak bisa di-map ke komponen apapun → arsitektur perlu didesain
 ```
 SYSTEM-EXPERIMENT MAPPING
 
-Research Question: ____________________
+Research Question: Apakah metode regularisasi seperti dropout dan L2 regularization pada model CNN dapat meningkatkan kemampuan generalisasi dan F1-score dibandingkan Random Forest pada prediksi penyakit jantung menggunakan dataset medis terbatas?
 
 Variable → Component Mapping:
 | Variabel | Tipe | Komponen Sistem | Cara Manipulasi/Pengukuran |
 |----------|------|-----------------|---------------------------|
-|          | IV   |                 |                           |
-|          | DV   |                 |                           |
-|          | CV   |                 |                           |
+|     Jenis metode regularisasi     | IV   |        Modul training model CNN         |              Mengubah config regularisasi: tanpa regularisasi, dropout, atau L2 regularization             |
+|     Performa model     | DV   |        Modul evaluasi & metrics collector         |             Mengukur Accuracy, Precision, Recall, F1-score, dan Generalization Error              |
+|     Dataset & parameter training     | CV   |        Dataset loader dan configuration file         |             Menjaga dataset, learning rate, epoch, dan batch size tetap sama pada seluruh eksperimen              |
 
 4 Prinsip Desain:
-  [ ] Traceability — Setiap komponen bisa ditelusuri ke variabel
-  [ ] Variable Isolation — IV bisa diubah tanpa mengubah CV
-  [ ] Measurement Integration — Pengukuran DV built-in
-  [ ] Reproducibility — Setup bisa direkonstruksi
+  [ ✓ ] Traceability — Setiap komponen bisa ditelusuri ke variabel
+  [ ✓ ] Variable Isolation — IV bisa diubah tanpa mengubah CV
+  [ ✓ ] Measurement Integration — Pengukuran DV built-in
+  [ ✓ ] Reproducibility — Setup bisa direkonstruksi
 
 Experimental Setup:
-  Input data     : ____________________
-  Parameter      : ____________________
-  Output format  : ____________________
+  Input data     : Training & testing menggunakan Heart Disease Dataset dari UCI Machine Learning Repository dengan train-test split 80:20.
+  Parameter      : Epoch: 50, Batch size: 32, Learning rate: 0.001, Random seed: 42, Model comparison: CNN + Dropout vs CNN + L2 vs CNN tanpa regularisasi vs Random Forest
+  Output format  : Log CSV hasil evaluasi model (Accuracy, Precision, Recall, F1-Score, Generalization Error), confusion matrix, grafik training-validation loss, dan classification report setiap model.
 ```
 
 ---
@@ -107,16 +107,16 @@ Experimental Setup:
 
 Gunakan RQ dan variabel dari WS-05. Petakan ke komponen sistem.
 
-**RQ:** __________________________________________________
+**RQ:** Apakah metode regularisasi seperti dropout dan L2 regularization dapat meningkatkan kemampuan generalisasi dan F1-score model CNN dibandingkan Random Forest pada prediksi penyakit jantung menggunakan dataset medis terbatas?
 
 | Variabel | Tipe | Komponen Sistem | Cara Manipulasi / Pengukuran |
 |----------|------|-----------------|---------------------------|
-| *Contoh: Jenis model* | *IV* | *Modul classifier (swap RF ↔ CNN)* | *Ganti config `model_type`* |
-| | DV | | |
-| | CV | | |
+| Jenis regularisasi | IV | Modul CNN training | Mengubah parameter regularisasi pada configuration file |
+| Performa model | DV | Metrics collector | Menghitung Accuracy, Recall, Precision, F1-score |
+| Dataset & parameter training | CV | Dataset loader & config system | Menjaga dataset dan parameter training tetap sama |
 
-**Apakah semua variabel bisa di-map?** [ ] Ya / [ ] Tidak
-> Jika tidak, komponen apa yang perlu ditambahkan? _________
+**Apakah semua variabel bisa di-map?** [ ✓ ] Ya / [ ] Tidak
+> Jika tidak, komponen apa yang perlu ditambahkan? Tidak perlu penambahan komponen karena seluruh variabel penelitian sudah memiliki modul yang sesuai di dalam sistem eksperimen.
 
 ---
 
@@ -126,15 +126,14 @@ Evaluasi desain sistem terhadap 4 prinsip.
 
 | Prinsip | Status | Bukti / Penjelasan |
 |---------|--------|-------------------|
-| Traceability | *Contoh: ✅ — setiap modul punya label variabel* | |
-| Modularity | | |
-| Controllability | | |
-| Measurability | | |
+| Traceability | ✅ | Setiap modul sistem terhubung langsung dengan variabel penelitian |
+| Modularity | ✅ | Metode regularisasi dapat diganti tanpa mengubah modul lain |
+| Controllability | ✅ | Seluruh parameter training disimpan di configuration file |
+| Measurability | ✅ | Sistem otomatis menghasilkan metrik evaluasi setelah training selesai |
 
-**Prinsip mana yang paling sulit dipenuhi?** _______________
+**Prinsip mana yang paling sulit dipenuhi?** Variable Isolation / Controllability
 **Strategi untuk mengatasinya:**
-> ___________________________________________________
-
+> Menggunakan configuration-driven experiment sehingga seluruh parameter seperti epoch, batch size, dan learning rate dikontrol melalui config file, bukan diubah manual di kode program. Selain itu, random seed dibuat tetap agar hasil eksperimen lebih konsisten dan reproducible.
 ---
 
 ## Latihan 3 — Ablation Study Planning
@@ -146,14 +145,14 @@ Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 
 | Kondisi | Komponen A | Komponen B | Komponen C | Hasil yang Diharapkan |
 |---------|-----------|-----------|-----------|----------------------|
-| Full | *Contoh: ✅ CNN* | *Contoh: ✅ Temporal features* | *Contoh: ✅ Z-score norm* | *Baseline penuh* |
-| – A | ❌ (ganti RF) | ✅ | ✅ | |
-| – B | ✅ | ❌ (tanpa temporal) | ✅ | |
-| – C | ✅ | ✅ | ❌ (tanpa normalisasi) | |
+| Full | ✅ CNN | ✅ Dropout | ✅ L2 Regularization | Performa terbaik — CNN mampu mempelajari pola hubungan antar fitur medis, dropout membantu mengurangi overfitting dengan menonaktifkan neuron secara acak, dan L2 regularization menjaga bobot model tetap stabil sehingga generalization error paling rendah |
+| – A | ❌ (ganti RF) | ✅ | ✅ | Penurunan F1-Score karena Random Forest tidak melakukan feature learning otomatis seperti CNN. Model hanya mengandalkan pemisahan berbasis tree sehingga pola kompleks antar fitur medis lebih sulit dipelajari |
+| – B | ✅ | ❌ (tanpa dropout) | ✅ | Overfitting meningkat karena seluruh neuron selalu aktif selama training sehingga model lebih mudah menghafal data training dibanding memahami pola umum data pasien |
+| – C | ✅ | ✅ | ❌ (tanpa L2 Regularization) | Generalization error meningkat karena bobot model menjadi terlalu besar dan tidak terkontrol. Model cenderung terlalu sensitif terhadap pola tertentu pada data training sehingga performa pada data testing menurun |
 
-**Komponen mana yang diprediksi paling berkontribusi?** _____
+**Komponen mana yang diprediksi paling berkontribusi?** Dropout
 **Mengapa?**
-> ___________________________________________________
+> Karena dropout membantu mencegah overfitting dengan cara menonaktifkan sebagian neuron secara acak selama proses training. Dengan begitu model tidak terlalu bergantung pada pola tertentu di data training dan kemampuan generalisasi terhadap data baru menjadi lebih baik, terutama pada dataset medis yang ukurannya terbatas.
 
 ---
 
@@ -162,5 +161,6 @@ Jika sistem memiliki 3 komponen utama, rencanakan ablation study.
 > Apa risiko jika sistem dibangun seperti produk (monolitik, fitur lengkap) lalu baru dilakukan eksperimen? Mengapa arsitektur modular penting untuk riset?
 
 **Jawaban:**
-> ___________________________________________________
-> ___________________________________________________
+> Jika sistem dibangun seperti produk monolitik dengan banyak fitur sekaligus, maka eksperimen menjadi sulit dikontrol karena banyak komponen saling terhubung. Akibatnya, peneliti akan kesulitan mengetahui apakah perubahan hasil berasal dari variabel penelitian atau dari fitur lain yang ikut memengaruhi sistem.
+
+Arsitektur modular penting dalam riset karena setiap komponen dapat dipisahkan dan diuji secara independen. Dengan begitu, variabel penelitian lebih mudah diisolasi, eksperimen lebih reproducible, dan peneliti dapat melakukan ablation study untuk melihat kontribusi setiap komponen terhadap hasil akhir.
