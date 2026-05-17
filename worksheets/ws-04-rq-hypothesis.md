@@ -67,34 +67,34 @@ Jika rantai ini tidak lengkap, RQ belum mature. Bi-directional: RQ yang tidak bi
 ```
 RQ-CONTRIBUTION-HYPOTHESIS
 
-Gap Statement  : ____________________
+Gap Statement  : Model machine learning untuk prediksi penyakit jantung sering mengalami overfitting ketika dilatih menggunakan dataset medis terbatas. Sebagian besar penelitian hanya berfokus pada peningkatan akurasi tanpa mengevaluasi kemampuan generalisasi model pada data baru. Selain itu, belum ada evaluasi komparatif yang secara langsung membandingkan efektivitas metode regularisasi seperti dropout dan L2 regularization pada model CNN untuk mengurangi overfitting dan meningkatkan performa generalisasi dibandingkan metode machine learning klasik seperti Random Forest.
 
 Research Question:
-  Tipe         : [ ] Comparison  [ ] Improvement  [ ] Exploratory
-  Formulasi    : ____________________
-  Variabel IV  : ____________________
-  Variabel DV  : ____________________
-  Metrik       : ____________________
-  Dataset      : ____________________
-  Baseline     : ____________________
+  Tipe         : [ x ] Comparison  [ x ] Improvement  [ ] Exploratory
+  Formulasi    : Apakah metode regularisasi seperti dropout dan L2 regularization pada model CNN yang dilatih menggunakan Heart Disease Dataset dapat meningkatkan kemampuan generalisasi dan F1-score secara signifikan dibandingkan model CNN tanpa regularisasi dan Random Forest pada prediksi penyakit jantung?
+  Variabel IV  : Jenis metode regularisasi pada model CNN — tanpa regularisasi, dropout, dan L2 regularization
+  Variabel DV  : Performa model prediksi penyakit jantung dan kemampuan generalisasi model pada data baru
+  Metrik       : Accuracy, Precision, Recall, F1-score, dan Generalization Error
+  Dataset      : Heart Disease Dataset (UCI Machine Learning Repository)
+  Baseline     : Random Forest dan CNN tanpa regularisasi
 
 Quality Check RQ:
-  [ ] Variabel spesifik
-  [ ] Metrik jelas
-  [ ] Baseline ada
-  [ ] Konteks disebutkan
-  [ ] Memerlukan eksperimen (bukan hanya survei literatur)
+  [ x ] Variabel spesifik — dropout, L2 regularization, CNN, Random Forest
+  [ x ] Metrik jelas — Accuracy, Precision, Recall, F1-score, Generalization Error
+  [ x ] Baseline ada — Random Forest dan CNN standar tanpa regularisasi
+  [ x ] Konteks disebutkan — prediksi penyakit jantung menggunakan dataset medis terbatas
+  [ x ] Memerlukan eksperimen (bukan hanya survei literatur) — training dan evaluasi model machine learning menggunakan dataset pasien
 
 Contribution Statement:
-  Apa yang baru diketahui : ____________________
-  Jenis kontribusi        : [ ] Improvement  [ ] Comparison  [ ] Novel approach
-  Gap yang diisi          : ____________________
+  Apa yang baru diketahui : Metode regularisasi seperti dropout dan L2 regularization dapat meningkatkan kemampuan generalisasi model CNN pada dataset medis terbatas sehingga model tidak hanya memiliki akurasi tinggi pada data training, tetapi juga mampu mempertahankan performa pada data testing baru. Penelitian ini juga memberikan evaluasi komparatif mengenai metode regularisasi mana yang paling efektif dibandingkan Random Forest dan CNN tanpa regularisasi.
+  Jenis kontribusi        : [ x ] Improvement  [ x ] Comparison  [ ] Novel approach
+  Gap yang diisi          : Keterbatasan model CNN yang mudah mengalami overfitting pada dataset medis kecil → diatasi menggunakan metode regularisasi seperti dropout dan L2 regularization. Keterbatasan penelitian sebelumnya yang hanya fokus pada akurasi training → diatasi dengan evaluasi kemampuan generalisasi menggunakan F1-score dan generalization error.
 
 Hypothesis Pair:
-  H₀ : ____________________
-  H₁ : ____________________
-  Threshold              : ____________________
-  Justifikasi threshold  : ____________________
+  H₀ : Tidak terdapat perbedaan signifikan pada F1-score dan kemampuan generalisasi antara model CNN yang menggunakan metode regularisasi dan model CNN tanpa regularisasi maupun Random Forest dalam prediksi penyakit jantung menggunakan Heart Disease Dataset.
+  H₁ : Model CNN yang menggunakan metode regularisasi seperti dropout dan L2 regularization menghasilkan F1-score dan kemampuan generalisasi yang lebih tinggi secara signifikan dibandingkan CNN tanpa regularisasi dan Random Forest pada prediksi penyakit jantung menggunakan Heart Disease Dataset.
+  Threshold              : α = 0.05; peningkatan F1-score minimal ≥ 5% dibanding baseline
+  Justifikasi threshold  : Threshold α = 0.05 digunakan karena merupakan standar umum dalam penelitian machine learning dan pengujian statistik untuk menentukan signifikansi hasil eksperimen. Peningkatan F1-score minimal 5% digunakan untuk memastikan peningkatan performa model benar-benar berasal dari pengaruh metode regularisasi dan bukan hanya akibat variasi random selama proses training model.
 ```
 
 ---
