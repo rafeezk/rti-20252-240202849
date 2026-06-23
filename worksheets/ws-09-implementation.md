@@ -77,7 +77,7 @@ Design → Implementation → Environment Setup → Execution Consistency → Re
 
 ## Template A.9 — Dokumentasi Setup Eksperimen
 
-
+```
 EXPERIMENT SETUP DOCUMENTATION
 
 Hardware:
@@ -110,7 +110,9 @@ Reproducibility Check:
 [x] Seed ditetapkan di semua level (Python, NumPy, TensorFlow)
 [x] Config di version control
 [x] README instruksi reproduksi lengkap
+```
 
+```
 Latihan 1 — Environment Specification
 Komponen	Spesifikasi
 CPU	Intel Core i3-1005G1 (2 Core, 4 Thread, 1.20 GHz)
@@ -128,6 +130,9 @@ Scikit-learn	1.6.1	Random Forest baseline + evaluasi metrik
 Pandas	2.2.3	preprocessing dataset CSV
 NumPy	2.0.2	operasi numerik + kontrol seed
 Matplotlib	3.10.0	visualisasi loss dan accuracy
+```
+
+```
 Latihan 2 — Repeatability Test Plan
 Run	Seed	Metrik Utama	Hasil Sama?
 1	42	F1-Score	—
@@ -143,6 +148,9 @@ Checklist kontrol:
  Dataset tidak berubah
  Config konsisten
  Tidak ada background process saat eksperimen
+```
+
+```
 Latihan 3 — README Eksperimen
 Judul Eksperimen: Pengaruh Regularisasi (Dropout & L2) pada CNN terhadap Generalisasi Prediksi Penyakit Jantung
 1. Environment
@@ -176,6 +184,7 @@ Confusion Matrix
 Training curve (loss & accuracy)
 CSV hasil evaluasi per model
 Refleksi
+```
 
 Level saat ini: [x] Repeatability / [x] Reproducibility / [ ] Belum keduanya
 
