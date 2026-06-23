@@ -10,185 +10,177 @@
 
 Tujuan implementasi riset bukan membuat software yang berfungsi, melainkan membangun **instrumen pengukuran yang konsisten**. Setiap modul harus di-mapping ke variabel (dari Bab 6), parameter harus config-driven, dan logging aktif dari hari pertama.
 
-> **Mengapa reproducibility penting?** Sains dibangun di atas prinsip verifikasi — temuan harus bisa dikonfirmasi oleh peneliti lain. _Replicability crisis_ yang terjadi di banyak paper riset ML/AI disebabkan oleh environment tidak terdokumentasi: orang lain tidak bisa reproduksi, hasil diragukan, kepercayaan terhadap temuan hilang. Prinsip: **dokumentasi environment = snapshot kredibilitas riset Anda.**
+### Mengapa reproducibility penting?
 
-### Reproducible Implementation Model
+Sains dibangun di atas prinsip verifikasi — temuan harus bisa dikonfirmasi oleh peneliti lain. Replicability crisis yang terjadi di banyak paper riset ML/AI disebabkan oleh environment tidak terdokumentasi: orang lain tidak bisa reproduksi, hasil diragukan, kepercayaan terhadap temuan hilang. Prinsip: dokumentasi environment = snapshot kredibilitas riset Anda.
 
-```
+---
+
+## Reproducible Implementation Model
+
+
 Design → Implementation → Environment Setup → Execution Consistency → Reproducibility → Trustworthy Result
-```
 
-Setiap transisi memiliki syarat:
-- Design → Implementation: kode sesuai mapping variabel-ke-komponen
-- Implementation → Environment: versi, dependency, seed, path, OS eksplisit
-- Environment → Consistency: seed terkunci, urutan deterministik
+
+- Design → Implementation: mapping variabel ke modul (CNN, RF, Metrics)
+- Implementation → Environment: dependency + hardware + seed
+- Environment → Consistency: deterministic execution
 - Consistency → Reproducibility: dokumentasi lengkap
-- Reproducibility → Trust: siapa pun ikuti dokumentasi → hasil sama/serupa
+- Reproducibility → Trust: hasil bisa direplikasi
 
-### Repeatability vs Reproducibility
+---
+
+## Repeatability vs Reproducibility
 
 | Level | Peneliti | Environment | Hasil |
-|-------|---------|-------------|-------|
-| **Repeatability** | Sama | Sama | Sama persis |
-| **Reproducibility** | Berbeda | Berbeda (ikuti docs) | Sama/serupa |
+|-------|----------|-------------|-------|
+| Repeatability | Sama | Sama | Sama persis |
+| Reproducibility | Berbeda | Berbeda (ikuti docs) | Sama/serupa |
 
-Capai **repeatability** dulu, baru **reproducibility**.
+---
 
-### Engineering vs Research Perspective
+## Engineering vs Research Perspective
 
 | Aspek | Engineering | Research |
-|-------|-----------|---------|
-| Tujuan | Sistem berfungsi untuk user | Instrumen pengukuran konsisten |
-| Dependency | Update ke terbaru | Lock di versi spesifik |
-| Testing | Unit, integration, E2E | Repeatability test (run ulang → sama?) |
-| Dokumentasi | User guide, API docs | Environment spec, execution steps, expected output |
-| Config | Default masuk akal | Setiap parameter eksplisit & adjustable |
+|-------|------------|----------|
+| Tujuan | Sistem berjalan | Instrumen eksperimen valid |
+| Dependency | Latest version | Version locked |
+| Testing | Functional testing | Repeatability test |
+| Config | Default | Fully controlled |
 
-### Jebakan Kognitif
+---
 
-1. Menunda environment setup → bug sulit dilacak
-2. Tidak pakai version control → hasil tidak bisa direkonstruksi
-3. Menolak Docker/container → "di laptop saya bisa" saat review
-   - **Docker** = teknologi container yang "membungkus" aplikasi beserta seluruh dependency-nya dalam satu unit terisolasi. Hasilnya: kode berjalan identik di laptop, server, maupun reviewer lain. Intro singkat: `docker run -v $(pwd):/workspace environment-image python run_experiment.py`
-4. 3× hasil sama ≠ repeatable (bisa cache/state tersimpan)
+## Jebakan Kognitif
 
-### Dependency Locking
+- Setup dilakukan di akhir → sulit debugging  
+- Dependency tidak dikunci → hasil berubah  
+- Seed tidak dikontrol → eksperimen tidak valid  
+- “Di laptop saya bisa” ≠ valid secara ilmiah  
 
-Mengandalkan "install library terbaru" berbahaya: versi berbeda = perilaku berbeda = hasil tidak reproducible. Praktik:
-- **Python**: buat `requirements.txt` dengan versi eksplisit: `scikit-learn==1.3.2`, lalu kunci dengan `pip freeze > requirements.txt`
-- **Conda**: gunakan `conda env export > environment.yml` untuk snapshot lengkap
-- **Node.js/R/Julia**: gunakan `package-lock.json` / `renv.lock` / `Project.toml` — semua fungsi serupa: lock versi + hash
+---
 
-### Istilah Penting
+## Dependency Locking
 
-- **Environment Specification** — Deskripsi lengkap: hardware, OS, runtime, library + versi, config, seed
-- **Dependency** — Komponen eksternal yang harus di-lock versinya
-- **Config-driven** — Parameter dieksternalisasi ke file konfigurasi, bukan hardcode
+- Gunakan `requirements.txt`
+- Gunakan `pip freeze` untuk snapshot environment
+- GPU driver juga mempengaruhi hasil ML
+
+---
+
+## Istilah Penting
+
+- **Environment Specification** → seluruh detail sistem  
+- **Dependency** → library eksternal  
+- **Config-driven** → parameter tidak hardcoded  
 
 ---
 
 ## Template A.9 — Dokumentasi Setup Eksperimen
 
-```
+
 EXPERIMENT SETUP DOCUMENTATION
 
 Hardware:
-  CPU     : ____________________
-  RAM     : ____________________
-  GPU     : ____________________
-  Storage : ____________________
+CPU : Intel Core i3-1005G1 (2 Core, 4 Thread, 1.20 GHz)
+RAM : 8 GB DDR4 (7.74 GB usable)
+GPU : NVIDIA GeForce MX330 (2 GB) + Intel UHD Graphics (128 MB)
+Storage : 238 GB SSD SAMSUNG MZVLQ256HAJD-00000
 
 Software:
-  OS        : ____________________
-  Runtime   : ____________________
-  Framework : ____________________
+OS : Windows 11 64-bit
+Runtime : Python 3.11
+Framework : TensorFlow 2.16.1, Scikit-learn 1.6.1
 
 Dependencies:
-| Library | Version | Sumber | Hash/Checksum |
-|---------|---------|--------|---------------|
-|         |         |        |               |
-|         |         |        |               |
+
+Library	Version	Sumber	Hash/Checksum
+TensorFlow	2.16.1	pip	requirements.txt
+Scikit-learn	1.6.1	pip	requirements.txt
+Pandas	2.2.3	pip	requirements.txt
+NumPy	2.0.2	pip	requirements.txt
+Matplotlib	3.10.0	pip	requirements.txt
 
 Konfigurasi:
-  Config file     : ____________________
-  Random seed     : ____________________
-  Hyperparameters : ____________________
+Config file : config.yaml
+Random seed : 42
+Hyperparameters : CNN (filters=64, kernel=3x3, dropout=0.5, L2=0.001), RF (n_estimators=100)
 
 Reproducibility Check:
-  [ ] Dependency terdokumentasi (requirements.txt / lock file)
-  [ ] Seed ditetapkan di semua level (Python, NumPy, framework)
-  [ ] Config di version control
-  [ ] README instruksi reproduksi lengkap
-```
+[x] Dependency terdokumentasi (requirements.txt / lock file)
+[x] Seed ditetapkan di semua level (Python, NumPy, TensorFlow)
+[x] Config di version control
+[x] README instruksi reproduksi lengkap
 
----
+Latihan 1 — Environment Specification
+Komponen	Spesifikasi
+CPU	Intel Core i3-1005G1 (2 Core, 4 Thread, 1.20 GHz)
+RAM	8 GB DDR4 (7.74 GB usable)
+GPU	NVIDIA GeForce MX330 (2 GB) + Intel UHD Graphics
+Storage	238 GB SSD SAMSUNG MZVLQ256HAJD-00000
+OS	Windows 11 64-bit
+Runtime	Python 3.11
+Framework	TensorFlow 2.16.1, Scikit-learn 1.6.1
+Random Seed	42
+Dependencies (minimal 5)
+Library	Version	Alasan Dibutuhkan
+TensorFlow	2.16.1	CNN training untuk klasifikasi penyakit jantung
+Scikit-learn	1.6.1	Random Forest baseline + evaluasi metrik
+Pandas	2.2.3	preprocessing dataset CSV
+NumPy	2.0.2	operasi numerik + kontrol seed
+Matplotlib	3.10.0	visualisasi loss dan accuracy
+Latihan 2 — Repeatability Test Plan
+Run	Seed	Metrik Utama	Hasil Sama?
+1	42	F1-Score	—
+2	42	F1-Score	[x] Ya
+3	42	F1-Score	[x] Ya
+Jika hasil berbeda, kemungkinan penyebab:
+GPU (MX330) non-deterministic computation
+TensorFlow tidak fully deterministic mode
+Background process Windows (update/antivirus)
+Cache training model sebelumnya
+Checklist kontrol:
+ Random seed di semua framework
+ Dataset tidak berubah
+ Config konsisten
+ Tidak ada background process saat eksperimen
+Latihan 3 — README Eksperimen
+Judul Eksperimen: Pengaruh Regularisasi (Dropout & L2) pada CNN terhadap Generalisasi Prediksi Penyakit Jantung
+1. Environment
 
-## Latihan 1 — Environment Specification
+Windows 11 64-bit, Intel Core i3-1005G1, RAM 8GB, NVIDIA MX330, Python 3.11, TensorFlow 2.16.1, Scikit-learn 1.6.1.
 
-Dokumentasikan environment untuk eksperimen Anda (boleh environment saat ini atau yang direncanakan).
+2. Installation
 
-| Komponen | Spesifikasi |
-|----------|------------|
-| CPU | *Contoh: Intel Core i7-12700H, 14 Core* |
-| RAM | *Contoh: 32 GB DDR5* |
-| GPU | *Contoh: NVIDIA RTX 3060 6GB / CPU-only jika tidak ada GPU* |
-| OS | *Contoh: Ubuntu 22.04 LTS / Windows 11* |
-| Runtime | |
-| Framework | |
-| Random Seed | |
+pip install -r requirements.txt
 
-**Dependencies (minimal 5):**
+3. Data
 
-| Library | Version | Alasan Dibutuhkan |
-|---------|---------|-------------------|
-| *Contoh: scikit-learn* | *1.3.2* | *Klasifikasi + evaluasi metrik* |
-| | | |
-| | | |
-| | | |
-| | | |
+Heart Disease Dataset (UCI Repository) berisi fitur klinis: usia, tekanan darah, kolesterol, denyut jantung maksimum, dll.
 
----
+4. Execution
 
-## Latihan 2 — Repeatability Test Plan
+python train.py --config config.yaml
 
-Rancang tes repeatability sederhana: jalankan kode yang sama 3× di environment yang sama.
+5. Configuration
 
-| Run | Seed | Metrik Utama | Hasil Sama? |
-|-----|------|-------------|-------------|
-| 1 | *Contoh: 42* | *Contoh: Accuracy* | — |
-| 2 | | | [ ] Ya / [ ] Tidak |
-| 3 | | | [ ] Ya / [ ] Tidak |
+model: CNN vs Random Forest
+dropout: 0.5
+l2: 0.001
+epochs: 100
+batch_size: 32
+seed: 42
 
-**Jika hasil berbeda, kemungkinan penyebab:**
+6. Expected Output
+Accuracy, Precision, Recall, F1-score
+Confusion Matrix
+Training curve (loss & accuracy)
+CSV hasil evaluasi per model
+Refleksi
 
-> Penyebab umum non-repeatability:
-> - **Thermal throttling** — CPU/GPU overheating pada run berturut-turut → clock speed turun → waktu eksekusi berubah
-> - **Background process** — antivirus scan, update OS, atau cloud sync aktif saat run berlangsung
-> - **Cache dari run sebelumnya** — hasil tersimpan di memori/disk sehingga run berikutnya tidak menjalankan komputasi penuh
-> - **Random state tidak dikontrol di semua level** — Python seed di-set, tapi NumPy/PyTorch/TensorFlow punya seed independen
+Level saat ini: [x] Repeatability / [x] Reproducibility / [ ] Belum keduanya
 
-___________________________________________________
+Komponen yang belum terdokumentasi:
 
-**Checklist kontrol yang sudah diterapkan:**
-- [ ] Random seed di-set di semua level
-- [ ] Tidak ada background process yang mengganggu
-- [ ] Cache dibersihkan antar-run
-- [ ] Config file yang sama untuk semua run
-
----
-
-## Latihan 3 — README Eksperimen
-
-Tulis README minimum untuk eksperimen Anda (6 komponen wajib).
-
-```
-# Judul Eksperimen: ____________________
-
-## 1. Environment
-> (Salin spesifikasi dari Latihan 1)
-
-## 2. Installation
-> (Langkah instalasi, misal: "pip install -r requirements.txt")
-
-## 3. Data
-> (Deskripsi data: sumber, format, ukuran)
-
-## 4. Execution
-> (Command untuk menjalankan eksperimen)
-
-## 5. Configuration
-> (File config yang digunakan + parameter kunci)
-
-## 6. Expected Output
-> (Contoh output yang diharapkan + format)
-```
-
----
-
-## Refleksi
-
-> Apakah eksperimen Anda saat ini bisa direproduksi oleh orang lain tanpa bantuan Anda? Komponen apa yang masih hilang?
-
-**Level saat ini:** [ ] Repeatability / [ ] Reproducibility / [ ] Belum keduanya
-**Komponen yang belum terdokumentasi:**
-> ___________________________________________________
+Detail driver GPU MX330 (CUDA/cuDNN jika digunakan)
+Script Docker untuk full portability
+Automation script untuk one-click reproduction
