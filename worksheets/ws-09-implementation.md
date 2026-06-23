@@ -112,8 +112,8 @@ Reproducibility Check:
 [x] README instruksi reproduksi lengkap
 ```
 
+## Latihan 1 — Environment Specification
 ```
-Latihan 1 — Environment Specification
 Komponen	Spesifikasi
 CPU	Intel Core i3-1005G1 (2 Core, 4 Thread, 1.20 GHz)
 RAM	8 GB DDR4 (7.74 GB usable)
@@ -132,8 +132,8 @@ NumPy	2.0.2	operasi numerik + kontrol seed
 Matplotlib	3.10.0	visualisasi loss dan accuracy
 ```
 
+## Latihan 2 — Repeatability Test Plan
 ```
-Latihan 2 — Repeatability Test Plan
 Run	Seed	Metrik Utama	Hasil Sama?
 1	42	F1-Score	—
 2	42	F1-Score	[x] Ya
@@ -150,8 +150,8 @@ Checklist kontrol:
  Tidak ada background process saat eksperimen
 ```
 
+## Latihan 3 — README Eksperimen
 ```
-Latihan 3 — README Eksperimen
 Judul Eksperimen: Pengaruh Regularisasi (Dropout & L2) pada CNN terhadap Generalisasi Prediksi Penyakit Jantung
 1. Environment
 
@@ -190,6 +190,6 @@ Level saat ini: [x] Repeatability / [x] Reproducibility / [ ] Belum keduanya
 
 Komponen yang belum terdokumentasi:
 
-Detail driver GPU MX330 (CUDA/cuDNN jika digunakan)
-Script Docker untuk full portability
-Automation script untuk one-click reproduction
+- Detail driver GPU MX330 (CUDA/cuDNN jika digunakan)
+- Script Docker untuk full portability
+- Automation script untuk one-click reproduction
