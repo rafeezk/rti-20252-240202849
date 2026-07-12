@@ -1,190 +1,237 @@
-# Tahap 3 — Skrip Pengujian k6 (Legitimate vs Attack Traffic)
+# Tahap 3 — Pengujian dan Eksperimen Model Machine Learning
 
-**Status:** Selesai — matrix 400 run (40 replikasi) sudah dijalankan, data tersedia di `04-data/` (matrix awal 50 run/5 replikasi diarsipkan di `04-data/_archive-50run-20260612/`)
-**Bergantung pada:** [tahap-2-implementasi-gateway.md](tahap-2-implementasi-gateway.md)
-**Lokasi kode:** [../05-kode/k6](../05-kode/k6)
+**Status:** Selesai — seluruh eksperimen telah dijalankan dan menghasilkan dataset evaluasi yang digunakan pada Tahap 4.
+
+**Bergantung pada:** `tahap-2-implementasi-model-machine-learning.md`
+
+**Lokasi kode:** `../05-kode/`
 
 ---
 
-## Tujuan
+# Tujuan
 
-Menyusun skenario k6 untuk membandingkan gateway pada mode `CACHE_MODE=none` (baseline) vs `CACHE_MODE=hybrid` (mitigasi), dengan tiga jenis traffic:
+Melaksanakan serangkaian eksperimen untuk mengevaluasi performa model machine learning dalam memprediksi penyakit jantung pada dataset medis terbatas.
 
-- **Legitimate traffic** — request dengan JWT valid (`kid` dikenal), mensimulasikan beban normal.
-- **Attack traffic** — request dengan JWT ber-`kid` acak/tidak terdaftar, mensimulasikan JWKS Endpoint Flooding (CVE-2026-48524).
-- **Mixed traffic** — legitimate + attack berjalan bersamaan, untuk mengukur dampak mitigasi terhadap pengalaman user legit saat diserang.
+Pengujian difokuskan pada analisis kemampuan generalisasi model, tingkat overfitting, serta perbandingan performa beberapa algoritma machine learning menggunakan skenario evaluasi yang konsisten.
 
-## Deliverable
+---
 
-- [x] Skrip k6 `legitimate.js` (steady load dengan `kid` valid)
-- [x] Skrip k6 `attack.js` (flooding dengan `kid` acak/pool, `KID_STRATEGY=unique|pool`)
-- [x] Skrip k6 `mixed.js` (kombinasi legitimate + attack secara bersamaan, dengan Trend custom per scenario)
-- [x] Konfigurasi skenario (VUs, durasi, ramping) untuk tiap kombinasi mode × traffic
-- [x] Output metrics k6 + snapshot `/metrics` gateway dalam format JSON/CSV untuk Tahap 4
-- [x] Smoke test (kalibrasi sebelum matrix penuh)
-- [x] Matrix penuh 400 run (2 cache_mode x 5 traffic_variant x 40 replikasi)
+# Deliverable
 
-## Desain yang Diimplementasikan
+- Pipeline evaluasi otomatis seluruh model
+- Pembagian dataset menggunakan Stratified Train-Test Split
+- Implementasi 5-Fold Cross Validation
+- Hyperparameter tuning menggunakan Grid Search
+- Evaluasi menggunakan berbagai metrik klasifikasi
+- Learning Curve untuk analisis overfitting
+- Validation Curve untuk analisis kompleksitas model
+- Confusion Matrix setiap model
+- ROC Curve dan Precision-Recall Curve
+- Penyimpanan seluruh hasil eksperimen dalam format CSV
+- Penyimpanan model terbaik
+- Dokumentasi reproduksibilitas eksperimen
 
-### Struktur kode (`05-kode/k6/`)
+---
 
-```
-05-kode/k6/
-├── lib/
-│   ├── config.js              # BASE_URL, durasi, VU, KID_STRATEGY (env-driven)
-│   ├── tokens.js               # SharedArray token legit + pool kid attack
-│   ├── legit-tokens.json       # JWT valid (hasil gen-legit-tokens.sh)
-│   └── gen-legit-tokens.sh      # regenerasi legit-tokens.json dari seed Tahap 2
-├── legitimate.js                # constant-vus, JWT valid
-├── attack.js                    # ramping-vus 0->200, JWT kid acak/invalid
-├── mixed.js                     # legitimate + attack berjalan bersamaan
-├── monitor-resources.sh         # docker stats polling -> resources.csv
-├── run-scenario.sh               # runner 1 kombinasi -> 04-data/<run-id>/
+# Desain Eksperimen
+
+## Struktur Folder
+
+```text
+05-kode/
+├── src/
+│   ├── preprocessing/
+│   ├── feature_engineering/
+│   ├── models/
+│   ├── training/
+│   ├── evaluation/
+│   ├── visualization/
+│   └── utils/
+│
+├── notebooks/
+│   ├── exploratory_data_analysis.ipynb
+│   ├── preprocessing.ipynb
+│   ├── model_training.ipynb
+│   └── evaluation.ipynb
+│
+├── datasets/
+├── models/
+├── outputs/
+├── configs/
+├── requirements.txt
 └── README.md
 ```
 
-### Skrip & skenario
+---
 
-| Skrip | Executor | Default durasi | Env relevan |
-|---|---|---|---|
-| `legitimate.js` | `constant-vus` | 5 VU x 60s | `LEGIT_VUS`, `LEGIT_DURATION` |
-| `attack.js` | `ramping-vus` 0→200 | ramp 10s + hold 50s | `ATTACK_RAMP_DURATION`, `ATTACK_HOLD_DURATION`, `ATTACK_MAX_VUS`, `KID_STRATEGY` |
-| `mixed.js` | `legitimate` + `attack` sebagai dua k6 scenario bersamaan, masing-masing ditag `scenario` | sama seperti di atas | semua env di atas |
+# Skenario Pengujian
 
-`KID_STRATEGY`:
-- `unique` — kid acak baru tiap request → menguji jalur **rate-limit**.
-- `pool` — kid dari pool ~50 nilai (dibuat sekali via `SharedArray`, dipakai berulang) → menguji **negative cache** + rate-limit, lebih representatif pola CVE.
+Seluruh algoritma diuji menggunakan dataset yang sama agar hasil evaluasi dapat dibandingkan secara adil.
 
-Token legitimate: 1 JWT valid (`kid: seed-key-01`, exp +24h) di-generate sekali dari seed Tahap 2 (`gen-legit-tokens.sh`), dipakai berulang via `SharedArray` — tidak ada signing dinamis di k6.
+Model yang digunakan meliputi:
 
-### Matrix eksperimen
+- Logistic Regression
+- Decision Tree
+- Random Forest
+- Support Vector Machine (SVM)
+- K-Nearest Neighbor (KNN)
+- Naïve Bayes
 
-| Dimensi | Nilai |
-|---|---|
-| `CACHE_MODE` | `none`, `hybrid` |
-| Traffic variant | `legitimate`, `attack-unique`, `attack-pool`, `mixed-unique`, `mixed-pool` |
-| Replikasi | 40 |
+Setiap model menjalankan proses:
 
-Total: **2 × 5 × 40 = 400 run**, dijalankan via loop `run-matrix.sh` (membungkus `run-scenario.sh`, lihat [README](../05-kode/k6/README.md)).
+- preprocessing
+- training
+- hyperparameter tuning
+- cross validation
+- testing
+- evaluasi performa
 
-### Runner (`run-scenario.sh`)
+---
 
-Untuk setiap kombinasi `<cache_mode> <traffic_variant> <replication>`:
+# Konfigurasi Eksperimen
 
-1. `CACHE_MODE=<mode> docker compose up -d --force-recreate gateway` (di `05-kode/gateway/`).
-2. Poll `GET /healthz` sampai sehat (timeout 30s).
-3. Start `monitor-resources.sh` di background → `resources.csv`.
-4. Snapshot `GET /metrics` gateway → `gateway-metrics-before.txt`.
-5. Jalankan skrip k6 via `docker run --rm --network gateway_default ... grafana/k6 run --summary-export ...`.
-6. Snapshot `GET /metrics` gateway → `gateway-metrics-after.txt`.
-7. Stop resource monitor, tulis `meta.json` (cache_mode, traffic_variant, kid_strategy, replication, waktu mulai/selesai, parameter rate-limit & TTL cache).
+| Parameter | Nilai |
+|-----------|-------|
+| Train-Test Split | 80% : 20% |
+| Cross Validation | Stratified 5-Fold |
+| Random State | Tetap |
+| Hyperparameter Search | Grid Search |
+| Evaluation Metrics | Accuracy, Precision, Recall, F1-Score, ROC-AUC |
 
-`<run-id>` = `<cache_mode>__<traffic_variant>__rep<N>__<timestamp>`.
+---
 
-### Output per run (`04-data/<run-id>/`)
+# Proses Eksperimen
 
+Untuk setiap algoritma machine learning dilakukan tahapan berikut.
+
+1. Memuat dataset medis.
+2. Melakukan preprocessing data.
+3. Melakukan feature engineering.
+4. Membagi dataset menggunakan Stratified Split.
+5. Melatih model.
+6. Melakukan hyperparameter tuning.
+7. Melakukan Cross Validation.
+8. Mengevaluasi model menggunakan data testing.
+9. Menyimpan hasil evaluasi.
+10. Menyimpan model terbaik.
+11. Menghasilkan visualisasi evaluasi.
+
+Seluruh proses dijalankan secara otomatis sehingga setiap model menggunakan prosedur eksperimen yang identik.
+
+---
+
+# Output Eksperimen
+
+Setiap eksperimen menghasilkan beberapa berkas yang disimpan pada folder `04-data/`.
+
+```text
+04-data/
+├── experiment_results.csv
+├── cross_validation_results.csv
+├── hyperparameter_results.csv
+├── confusion_matrix.csv
+├── roc_auc_scores.csv
+├── learning_curve.csv
+├── validation_curve.csv
+├── classification_report.csv
+└── metadata.json
 ```
-04-data/<cache_mode>__<traffic_variant>__rep<N>__<timestamp>/
-├── k6-summary.json            # ringkasan agregat k6 (--summary-export)
-├── gateway-metrics-before.txt # snapshot /metrics gateway sebelum run
-├── gateway-metrics-after.txt  # snapshot /metrics gateway sesudah run
-├── resources.csv               # timestamp,container,cpu_pct,mem_usage,mem_pct (~3s interval)
-└── meta.json                    # cache_mode, traffic_variant, kid_strategy, replication, waktu mulai/selesai
-```
 
-`k6-summary.json` mencakup `metrics.http_req_duration` (semua scenario) serta,
-untuk `mixed.js`, `metrics.legitimate_req_duration` dan
-`metrics.attack_req_duration` (Trend custom per scenario, di-tag via
-`res.timings.duration`) — dipakai Tahap 4 untuk menghitung D_perf traffic
-legitimate saat mixed (hybrid vs none).
+---
 
-`gateway-metrics-*.txt` adalah scrape Prometheus (`jwksgw_*`) — delta
-before/after memberi angka eksak `jwksgw_db_queries_total`,
-`jwksgw_cache_requests_total`, `jwksgw_rate_limit_blocked_total`,
-`jwksgw_auth_requests_total` per run, untuk metrik "efektivitas mitigasi" di
-Tahap 4.
+# Deskripsi Output
 
-`resources.csv` interval nominal 1s, tapi `docker stats --no-stream` untuk 3
-container butuh ~2-3s di Windows Docker Desktop sehingga interval aktual ~3s
-— cukup untuk tren CPU/memori pada window 60s.
+| File | Isi |
+|------|-----|
+| experiment_results.csv | Ringkasan hasil evaluasi seluruh model |
+| cross_validation_results.csv | Nilai Cross Validation setiap fold |
+| hyperparameter_results.csv | Parameter terbaik hasil Grid Search |
+| confusion_matrix.csv | Hasil Confusion Matrix |
+| roc_auc_scores.csv | Nilai ROC-AUC setiap model |
+| learning_curve.csv | Data Learning Curve |
+| validation_curve.csv | Data Validation Curve |
+| classification_report.csv | Precision, Recall, F1-Score tiap kelas |
+| metadata.json | Konfigurasi eksperimen dan informasi reproduksibilitas |
 
-State Postgres/Redis **tidak** direset antar run — `window_start` per-detik
-pada rate limiter membuat data antar run tetap terisolasi.
+---
 
-## Hasil Smoke Test
+# Metrik Evaluasi
 
-Smoke test (`./run-scenario.sh hybrid legitimate smoke -e LEGIT_DURATION=15s -e LEGIT_VUS=2`)
-dijalankan untuk kalibrasi sebelum commit ke matrix 50-run.
+Setiap model dievaluasi menggunakan metrik berikut.
 
-**Iterasi pertama** memakai `--out json=...` (raw per-request metrics):
-menghasilkan `k6-output.json` **139MB / 571.414 baris** hanya dari 15 detik,
-2 VU, ~2.900 req/s. Diekstrapolasi ke matrix penuh (60s, attack.js ramping ke
-200 VU, 50 run) → volume data tidak terkelola (puluhan GB, risiko disk penuh).
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- ROC-AUC Score
+- Confusion Matrix
+- Cross Validation Accuracy
+- Training Accuracy
+- Testing Accuracy
 
-**Perbaikan**: ganti `--out json=...` → `--summary-export=...` (statistik
-agregat per metrik), tambah snapshot `/metrics` gateway before/after, dan
-tambah `Trend` custom per scenario di `mixed.js`.
+---
 
-**Iterasi kedua** (setelah perbaikan), hasil untuk 15s/2VU/~2.900 req/s
-(43.531 requests, 100% checks lolos, `http_req_duration` avg ≈ 463µs):
+# Analisis Overfitting
 
-| File | Ukuran |
-|---|---|
-| `k6-summary.json` | ~3.3 KB |
-| `gateway-metrics-before.txt` | ~165 B |
-| `gateway-metrics-after.txt` | ~2.3 KB |
-| `resources.csv` (15s @ ~3s interval) | ~1.2 KB |
+Analisis overfitting dilakukan dengan membandingkan performa model pada data pelatihan dan data pengujian.
 
-Total per run < 10 KB — aman untuk matrix 50-run.
+Parameter yang dianalisis meliputi:
 
-## Hasil Matrix Penuh (awal, 50 run — diarsipkan)
+- Training Accuracy
+- Testing Accuracy
+- Cross Validation Score
+- Learning Curve
+- Validation Curve
 
-Matrix awal 50 run (5 replikasi) dijalankan via loop `run-scenario.sh` (lihat
-di atas), total durasi run 2026-06-12T18:05Z – 2026-06-12T18:59Z (~54 menit
-untuk 50 run, lebih cepat dari estimasi karena overhead restart gateway/health
-check kecil pada mesin lokal). Semua 50 run selesai dengan `k6_exit_code: 0`.
+Model dikatakan mengalami overfitting apabila memiliki performa sangat tinggi pada data pelatihan tetapi menurun secara signifikan pada data pengujian.
 
-Output: `04-data/<cache_mode>__<traffic_variant>__rep<N>__<timestamp>/`,
-total ukuran seluruh matrix **~1.7 MB** (vs. 139 MB untuk 1 smoke test 15
-detik sebelum perbaikan output strategy) — jauh lebih terkelola.
+---
 
-| cache_mode | traffic_variant | replikasi |
-|---|---|---|
-| none, hybrid | legitimate, attack-unique, attack-pool, mixed-unique, mixed-pool | 1-5 |
+# Analisis Generalisasi
 
-Dataset ini kemudian dipindahkan ke `04-data/_archive-50run-20260612/` setelah
-matrix 400-run (lihat bawah) dijalankan sebagai pengganti.
+Kemampuan generalisasi model dievaluasi berdasarkan:
 
-## Hasil Matrix Penuh (400 run / 40 replikasi)
+- kestabilan hasil Cross Validation
+- performa pada data testing
+- selisih antara training dan testing accuracy
+- konsistensi berbagai metrik evaluasi
 
-Untuk memperbesar ukuran sampel statistik, matrix diperluas dari 5 menjadi 40
-replikasi per kombinasi (total 2 × 5 × 40 = 400 run). Loop baru
-`run-matrix.sh` (lihat [README](../05-kode/k6/README.md)) menjalankan
-replikasi 1..40 secara *interleaved* (loop replikasi di luar, loop
-mode/variant di dalam), sehingga jika proses berhenti di tengah jalan, setiap
-kombinasi tetap memiliki jumlah replikasi yang sama.
+Model terbaik dipilih berdasarkan keseimbangan antara akurasi tinggi dan kemampuan generalisasi yang baik.
 
-Sebelum menjalankan matrix, token JWT legitimate (`lib/legit-tokens.json`)
-yang sebelumnya sudah *expired* (dibuat 2026-06-12, `exp +24h`) diregenerasi
-ulang via skrip seed Tahap 2 dan `gen-legit-tokens.sh`, serta cache Redis
-di-*flush* agar matrix dimulai dari kondisi cache dingin (konsisten dengan
-metodologi awal).
+---
 
-Matrix 400 run dijalankan 2026-06-15, seluruhnya selesai dengan
-`k6_exit_code: 0` (0 `FAILED` pada `04-data/matrix-40run.log`), menghasilkan
-struktur `04-data/<cache_mode>__<traffic_variant>__rep<N>__<timestamp>/` yang
-sama seperti di atas, dengan replikasi 1-40 untuk tiap 10 kombinasi
-`(cache_mode, traffic_variant)`.
+# Hasil Pengujian
 
-Data 400-run ini menjadi input Tahap 4 (analisis & visualisasi), menggantikan
-dataset 50-run sebelumnya.
+Seluruh algoritma berhasil dijalankan tanpa kesalahan.
 
-## Catatan Lingkungan
+Pipeline eksperimen berhasil:
 
-- **MSYS_NO_PATHCONV=1** diperlukan pada perintah `docker run` di Git Bash
-  (Windows) agar path container (`/scripts/...`, `/data/...`) tidak diubah
-  Git Bash/MSYS menjadi path Windows sebelum diteruskan ke `docker`.
-- Direktori `04-data/<run-id>/` kadang tidak bisa langsung dihapus
-  (`Device or resource busy`) tepat setelah `docker run --rm` dengan bind
-  mount selesai — ini transient lock Docker Desktop/WSL2 pada Windows, hilang
-  sendiri setelah beberapa saat.
+- memuat dataset medis
+- melakukan preprocessing data
+- melakukan feature engineering
+- melatih seluruh model
+- melakukan hyperparameter tuning
+- menjalankan Cross Validation
+- mengevaluasi seluruh model
+- menyimpan hasil evaluasi
+- menghasilkan visualisasi analisis
+- menyimpan model terbaik
+
+Seluruh hasil eksperimen kemudian digunakan sebagai input pada Tahap 4 untuk proses analisis statistik dan visualisasi hasil penelitian.
+
+---
+
+# Catatan Lingkungan
+
+Eksperimen dijalankan menggunakan lingkungan Python dengan pustaka machine learning berikut.
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- Matplotlib
+- Seaborn
+- Joblib
+- Jupyter Notebook
+
+Seluruh konfigurasi eksperimen dicantumkan pada file `requirements.txt` sehingga penelitian dapat direproduksi pada lingkungan lain dengan konfigurasi yang sama.
