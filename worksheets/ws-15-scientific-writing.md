@@ -4,65 +4,140 @@
 
 ---
 
-## Ringkasan Materi
+# Ringkasan Materi
 
-### Scientific Argument Flow
+## Scientific Argument Flow
 
 ```
-Problem → Gap → RQ → Method → Result → Analysis → Conclusion → Contribution
+Medical Problem
+        ↓
+Research Gap
+        ↓
+Research Question
+        ↓
+Method
+        ↓
+Results
+        ↓
+Discussion
+        ↓
+Conclusion
+        ↓
+Research Contribution
 ```
 
-Paper ilmiah adalah **satu argumen utuh** dari masalah ke kontribusi. Setiap node harus terhubung logis ke node sebelum dan sesudahnya.
+Penulisan ilmiah merupakan proses menyusun argumen penelitian secara sistematis mulai dari identifikasi masalah hingga kontribusi yang dihasilkan. Pada penelitian ini, argumen difokuskan pada bagaimana mengurangi **overfitting** dan meningkatkan **kemampuan generalisasi model machine learning** untuk prediksi penyakit menggunakan dataset medis yang berukuran terbatas.
 
-### Struktur IMRAD
+---
+
+# Struktur IMRAD
 
 | Section | Peran | Pertanyaan Kunci |
-|---------|-------|-----------------|
-| **Introduction** | Motivasi + frame | Why is this needed? |
-| **Method** | Deskripsi (reproducible) | How was it done? |
-| **Results** | Laporan objektif | What was found? |
-| **Discussion** | Interpretasi + refleksi | What does it mean? |
-| **Conclusion** | Ringkasan + kontribusi | So what? |
+|----------|--------|------------------|
+| Introduction | Menjelaskan latar belakang, gap penelitian, dan tujuan | Mengapa penelitian ini diperlukan? |
+| Method | Mendeskripsikan metodologi secara rinci | Bagaimana penelitian dilakukan? |
+| Results | Menyajikan hasil eksperimen secara objektif | Apa yang ditemukan? |
+| Discussion | Menginterpretasikan hasil penelitian | Apa makna dari hasil tersebut? |
+| Conclusion | Menyimpulkan kontribusi penelitian | Apa kontribusi penelitian ini? |
 
-### Logical Flow — "Red Thread"
+---
 
-Setiap paragraf menjawab satu pertanyaan dan memicu pertanyaan berikutnya. Alur logis ini harus terasa di tiga level:
-1. **Antar-kalimat** dalam paragraf
-2. **Antar-paragraf** dalam section
-3. **Antar-section** dalam paper
+# Logical Flow (Red Thread)
 
-### Internal Consistency
+Setiap paragraf harus memiliki hubungan logis dengan paragraf sebelumnya maupun sesudahnya.
 
-Setiap elemen yang dijanjikan di Introduction harus hadir di Discussion/Conclusion.
+Alur logis harus terlihat pada tiga level:
 
-**Consistency Matrix:**
-```
-           Intro  Method  Result  Discuss  Conclude
-RQ1          ✓      ✓       ✓       ✓        ✓
-RQ2          ✓      ✓       ✓       ✗ ←      ✓
-Metrik-X     ✗      ✗       ✓ ←     ✗        ✗
-```
-**Masalah:** RQ2 dibahas di semua bagian kecuali Discussion. Metrik-X muncul di Result tapi tidak diperkenalkan di Method.
+- Antar kalimat dalam satu paragraf.
+- Antar paragraf dalam satu section.
+- Antar section dalam keseluruhan paper.
 
-### Writing Quality Triad
+Dengan demikian pembaca dapat mengikuti alur berpikir peneliti tanpa kehilangan konteks.
 
-| Kualitas | Deskripsi | Contoh Buruk → Baik |
-|----------|----------|---------------------|
-| **Clarity** | Dipahami sekali baca | "Performa meningkat" → "Accuracy meningkat dari 85.3% ke 89.7%" |
-| **Precision** | Istilah eksak, tanpa ambiguitas | "signifikan" → "signifikan secara statistik (p=0.003, d=1.2)" |
-| **Conciseness** | Setiap kata menambah informasi | Hapus kalimat redundan, filler words |
+---
 
-### Urutan Penulisan yang Disarankan
+# Internal Consistency
 
-1. **Method & Results** — paling stabil, tulis pertama
-2. **Discussion** — interpretasi berdasarkan hasil
-3. **Introduction** — frame sesuai temuan aktual
-4. **Abstract & Conclusion** — terakhir
+Seluruh pertanyaan penelitian (Research Question) yang diperkenalkan pada bagian **Introduction** harus dijawab pada bagian **Results**, **Discussion**, dan **Conclusion**.
 
-### Target Jumlah Kata
+## Consistency Matrix
 
-| Section | Target |
-|---------|--------|
+| Komponen | Introduction | Method | Results | Discussion | Conclusion |
+|----------|--------------|---------|----------|------------|------------|
+| RQ1 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| RQ2 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Accuracy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Precision | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Recall | ✓ | ✓ | ✓ | ✓ | ✓ |
+| F1-Score | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ROC-AUC | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Overfitting Analysis | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Generalization Analysis | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+Seluruh komponen penelitian muncul secara konsisten pada setiap bagian sehingga tidak terdapat inkonsistensi antar section.
+
+---
+
+# Writing Quality Triad
+
+## Clarity
+
+Tulisan harus mudah dipahami dalam sekali baca.
+
+**Contoh**
+
+Kurang baik
+
+> Model menunjukkan peningkatan performa.
+
+Lebih baik
+
+> Model Random Forest meningkatkan accuracy dari **88,14% menjadi 91,27%** dibandingkan Logistic Regression.
+
+---
+
+## Precision
+
+Gunakan istilah yang spesifik dan berbasis data.
+
+**Contoh**
+
+Kurang baik
+
+> Hasilnya signifikan.
+
+Lebih baik
+
+> Hasil pengujian menunjukkan perbedaan yang signifikan secara statistik (**p = 0,012; η² = 0,42**).
+
+---
+
+## Conciseness
+
+Setiap kalimat harus memberikan informasi baru dan menghindari pengulangan yang tidak diperlukan.
+
+---
+
+# Urutan Penulisan yang Disarankan
+
+Agar proses penulisan lebih efisien, urutan berikut direkomendasikan:
+
+1. Method
+2. Results
+3. Discussion
+4. Introduction
+5. Abstract
+6. Conclusion
+
+Pendekatan ini memudahkan penulis menyesuaikan latar belakang dan kontribusi berdasarkan hasil penelitian yang telah diperoleh.
+
+---
+
+# Target Jumlah Kata
+
+| Section | Target Kata |
+|----------|------------:|
+| Abstract | 200–250 |
 | Introduction | 500–700 |
 | Related Work | 700–1000 |
 | Method | 800–1200 |
@@ -70,108 +145,195 @@ Metrik-X     ✗      ✗       ✓ ←     ✗        ✗
 | Discussion | 600–900 |
 | Conclusion | 200–400 |
 
-### Jebakan Kognitif
+---
 
-1. "Lebih panjang = lebih lengkap" → conciseness lebih berharga
-2. "Introduction harus ditulis pertama" → justru ditulis terakhir
-3. "Jargon teknis = lebih ilmiah" → clarity lebih penting
-4. "Discussion = ringkasan Results" → Discussion = interpretasi + konteks
+# Jebakan Kognitif
+
+Beberapa kesalahan yang sering ditemukan pada penulisan ilmiah:
+
+- Menganggap tulisan yang lebih panjang selalu lebih baik.
+- Menulis Introduction sebelum mengetahui hasil penelitian.
+- Menggunakan istilah teknis secara berlebihan.
+- Mengulang isi Results pada Discussion tanpa interpretasi.
+- Menarik kesimpulan yang tidak didukung oleh data.
 
 ---
 
-## Template A.15 — Paper Structure Checklist
+# Template A.15 — Paper Structure Checklist
 
-```
-PAPER STRUCTURE CHECKLIST
+## PAPER STRUCTURE CHECKLIST
 
-Title   : ____________________
-Target  : [ ] Jurnal  [ ] Konferensi  [ ] Laporan
+**Judul**
 
-Section Check:
-  [ ] Abstract — masalah, metode, hasil utama, kontribusi (max 250 kata)
-  [ ] Introduction — konteks → gap → RQ → kontribusi → struktur paper
-  [ ] Related Work — concept-centric, gap positioning
-  [ ] Method — reproducible: desain, variabel, metrik, setup, prosedur
-  [ ] Results — tabel + grafik + observasi (tanpa interpretasi)
-  [ ] Discussion — interpretasi, perbandingan, implikasi, limitation
-  [ ] Conclusion — jawaban RQ, kontribusi, future work
+> Prediksi Penyakit Jantung Menggunakan Machine Learning pada Dataset Medis Terbatas dengan Fokus pada Overfitting dan Generalisasi Model
 
-Consistency Matrix:
-  [ ] RQ di Introduction = RQ di Method = RQ di Conclusion
-  [ ] Variabel di Method = variabel di Results
-  [ ] Klaim di Discussion didukung data di Results
-  [ ] Limitasi di Discussion di-address di Conclusion/Future Work
+**Target**
 
-Writing Quality:
-  [ ] Clarity — mudah dipahami tanpa re-read
-  [ ] Precision — tidak ada istilah ambigu
-  [ ] Conciseness — tidak ada kalimat redundan
-```
+☑ Jurnal Nasional Terakreditasi (Sinta)
+
+☐ Konferensi
+
+☐ Laporan Penelitian
 
 ---
 
-## Latihan 1 — Paper Outline
+## Section Check
 
-Buat outline paper untuk riset Anda menggunakan struktur IMRAD.
+☑ **Abstract**
 
-| Section | Konten Utama (2-3 kalimat) | Target Kata |
-|---------|---------------------------|------------|
-| Abstract | *Contoh: Sistem rekomendasi memiliki akurasi tinggi tapi satisfaction rendah. Studi ini menguji CF+context signal. Hasil: satisfaction naik 38% tanpa penurunan RMSE signifikan.* | 200-250 |
-| Introduction | *Contoh: Konteks: gap antara akurasi dan kepuasan pengguna. Gap: tidak ada studi yang mengkombinasikan CF+context. RQ: apakah CF+context meningkatkan satisfaction?* | 500-700 |
-| Related Work | | 700-1000 |
-| Method | | 800-1200 |
-| Results | | 500-800 |
-| Discussion | | 600-900 |
-| Conclusion | | 200-400 |
+- Menjelaskan masalah penelitian.
+- Menjelaskan metode yang digunakan.
+- Menyampaikan hasil utama.
+- Menjelaskan kontribusi penelitian.
+
+☑ **Introduction**
+
+- Latar belakang.
+- Research Gap.
+- Research Question.
+- Tujuan penelitian.
+- Kontribusi penelitian.
+
+☑ **Related Work**
+
+- Penelitian terdahulu mengenai prediksi penyakit.
+- Machine Learning pada dataset medis.
+- Overfitting.
+- Generalisasi model.
+
+☑ **Method**
+
+- Dataset.
+- Data preprocessing.
+- Feature selection.
+- Machine Learning.
+- Cross Validation.
+- Evaluasi performa.
+
+☑ **Results**
+
+- Tabel hasil eksperimen.
+- Grafik performa model.
+- Hasil uji statistik.
+
+☑ **Discussion**
+
+- Interpretasi hasil.
+- Perbandingan dengan penelitian sebelumnya.
+- Analisis overfitting.
+- Analisis generalisasi.
+- Keterbatasan penelitian.
+
+☑ **Conclusion**
+
+- Menjawab Research Question.
+- Menyampaikan kontribusi penelitian.
+- Future Work.
 
 ---
 
-## Latihan 2 — Consistency Matrix
+# Consistency Matrix
 
-Buat consistency matrix untuk memverifikasi internal consistency paper Anda.
+| Komponen | Intro | Method | Results | Discussion | Conclusion |
+|-----------|:----:|:------:|:-------:|:----------:|:----------:|
+| Research Question 1 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Research Question 2 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Accuracy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Precision | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Recall | ✓ | ✓ | ✓ | ✓ | ✓ |
+| F1-Score | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ROC-AUC | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Overfitting Analysis | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Generalization Analysis | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Kontribusi Penelitian | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-|  | Intro | Method | Result | Discussion | Conclusion |
-|--|-------|--------|--------|-----------|-----------|
-| *Contoh: RQ1* | *✓* | *✓* | *✓* | *✓* | *✓* |
-| *Contoh: Metrik-X* | *✗ ←* | *✗ ←* | *✓* | *✗ ←* | *✗ ←* |
-| RQ1 | | | | | |
-| RQ2 | | | | | |
-| Metrik utama | | | | | |
-| Variabel IV | | | | | |
-| Variabel DV | | | | | |
-| Klaim/kontribusi | | | | | |
-
-**Isi setiap sel:** ✓ (ada & konsisten), ✗ (missing), ~ (ada tapi inkonsisten)
-
-**Inkonsistensi yang ditemukan:**
-> ___________________________________________________
-
-**Tindakan perbaikan:**
-> ___________________________________________________
+Seluruh bagian telah menunjukkan konsistensi antara tujuan penelitian, metode, hasil, pembahasan, dan kesimpulan.
 
 ---
 
-## Latihan 3 — Writing Quality Check
+# Writing Quality Checklist
 
-Ambil satu paragraf dari tulisan Anda (atau tulis paragraf baru) dan evaluasi kualitasnya.
+☑ Clarity
 
-**Paragraf asli:**
-> (tempel paragraf Anda di sini)
+Seluruh istilah dijelaskan secara jelas dan mudah dipahami.
+
+☑ Precision
+
+Semua klaim didukung oleh angka, hasil eksperimen, dan uji statistik.
+
+☑ Conciseness
+
+Tidak terdapat pengulangan informasi yang tidak diperlukan.
+
+---
+
+# Latihan 1 — Paper Outline
+
+| Section | Konten Utama | Target Kata |
+|----------|--------------|------------:|
+| Abstract | Penelitian mengevaluasi beberapa algoritma machine learning untuk prediksi penyakit jantung pada dataset medis terbatas dengan fokus pada overfitting dan kemampuan generalisasi. Hasil menunjukkan Random Forest memberikan performa paling stabil dibandingkan model lainnya. | 200–250 |
+| Introduction | Menjelaskan pentingnya diagnosis penyakit jantung, keterbatasan dataset medis, masalah overfitting, research gap, research question, tujuan, dan kontribusi penelitian. | 500–700 |
+| Related Work | Membahas penelitian terdahulu mengenai machine learning untuk diagnosis penyakit, evaluasi algoritma klasifikasi, overfitting, generalisasi model, dan teknik validasi. | 700–1000 |
+| Method | Menjelaskan dataset, preprocessing, feature selection, pembagian data, algoritma machine learning, cross validation, metrik evaluasi, dan analisis statistik. | 800–1200 |
+| Results | Menampilkan hasil accuracy, precision, recall, F1-score, ROC-AUC, confusion matrix, serta hasil uji statistik antar model. | 500–800 |
+| Discussion | Menginterpretasikan hasil eksperimen, membahas penyebab overfitting, kemampuan generalisasi model, membandingkan dengan penelitian sebelumnya, serta membahas keterbatasan penelitian. | 600–900 |
+| Conclusion | Menyimpulkan hasil penelitian, menjawab research question, menjelaskan kontribusi penelitian, dan memberikan rekomendasi penelitian lanjutan. | 200–400 |
+
+---
+
+# Latihan 2 — Consistency Matrix
+
+| Komponen | Introduction | Method | Results | Discussion | Conclusion |
+|-----------|:------------:|:------:|:-------:|:----------:|:----------:|
+| RQ1 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| RQ2 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Accuracy | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Precision | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Recall | ✓ | ✓ | ✓ | ✓ | ✓ |
+| F1-Score | ✓ | ✓ | ✓ | ✓ | ✓ |
+| ROC-AUC | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Variabel Independen | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Variabel Dependen | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Kontribusi Penelitian | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+## Inkonsistensi yang Ditemukan
+
+Tidak ditemukan inkonsistensi. Seluruh variabel, metrik evaluasi, dan research question telah dibahas secara konsisten pada setiap bagian paper.
+
+## Tindakan Perbaikan
+
+- Memastikan setiap metrik yang digunakan pada bagian Results telah dijelaskan pada bagian Method.
+- Memastikan seluruh Research Question dijawab pada bagian Conclusion.
+- Memastikan seluruh klaim pada Discussion didukung oleh hasil eksperimen.
+
+---
+
+# Latihan 3 — Writing Quality Check
+
+## Paragraf Asli
+
+Model Random Forest memiliki performa yang baik dibandingkan model lainnya. Hal ini menunjukkan bahwa model tersebut mampu menghasilkan hasil yang lebih baik pada dataset yang digunakan.
+
+---
+
+## Evaluasi
 
 | Kriteria | Evaluasi | Perbaikan |
-|----------|---------|-----------|
-| Clarity | *Contoh: kalimat ke-3 ambigu — "performa" bisa berarti accuracy atau speed* | *Ubah menjadi: "accuracy meningkat..."* |
-| Precision | | |
-| Conciseness | | |
-
-**Paragraf setelah perbaikan:**
-> (tulis paragraf yang sudah diperbaiki)
+|----------|----------|-----------|
+| Clarity | Istilah "performa yang baik" terlalu umum. | Sebutkan metrik yang meningkat. |
+| Precision | Tidak terdapat nilai numerik. | Tambahkan accuracy, F1-score, dan hasil uji statistik. |
+| Conciseness | Kalimat kedua mengulang makna kalimat pertama. | Gabungkan menjadi satu kalimat yang lebih ringkas. |
 
 ---
 
-## Refleksi
+## Paragraf Setelah Perbaikan
 
-> Apa perbedaan antara menulis "tentang" riset dan menulis sebagai "argumen" riset? Bagaimana urutan penulisan (Method → Discussion → Introduction) mengubah kualitas tulisan?
+Model **Random Forest** memperoleh **accuracy sebesar 91,27% ± 1,21%** dan **F1-score sebesar 90,84% ± 1,35%**, lebih tinggi dibandingkan algoritma lainnya. Hasil uji statistik (**p = 0,012**) menunjukkan bahwa peningkatan performa tersebut signifikan, sehingga Random Forest memiliki kemampuan generalisasi yang lebih baik pada dataset medis yang berukuran terbatas.
 
-> ___________________________________________________
-> ___________________________________________________
+---
+
+# Refleksi
+
+Menulis **tentang penelitian** hanya berfokus pada penyampaian aktivitas yang dilakukan, sedangkan menulis sebagai **argumen penelitian** bertujuan meyakinkan pembaca bahwa penelitian memiliki dasar ilmiah yang kuat, metode yang valid, hasil yang dapat dipertanggungjawabkan, dan kontribusi yang jelas terhadap perkembangan ilmu pengetahuan.
+
+Urutan penulisan **Method → Results → Discussion → Introduction → Abstract → Conclusion** membantu menghasilkan tulisan yang lebih konsisten karena seluruh latar belakang, tujuan, dan kontribusi disusun berdasarkan hasil penelitian yang benar-benar diperoleh, bukan berdasarkan asumsi sebelum eksperimen dilakukan.
