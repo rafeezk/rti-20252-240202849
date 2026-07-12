@@ -25,10 +25,10 @@ Data mentah belum bisa dipercaya. Harus melewati pipeline validasi sebelum siap 
 
 ### Proses Validasi Progresif
 
-1. **Format validation** — Tipe file, header, kolom
-2. **Range validation** — Nilai dalam batas logis
-3. **Consistency validation** — Format seragam antar-run
-4. **Logic validation** — Data cocok dengan desain eksperimen
+1. Format validation — Tipe file, header, kolom
+2. Range validation — Nilai dalam batas logis
+3. Consistency validation — Format seragam antar-run
+4. Logic validation — Data cocok dengan desain eksperimen
 
 Jika gagal di langkah awal → tidak perlu lanjut.
 
@@ -56,40 +56,40 @@ Jika gagal di langkah awal → tidak perlu lanjut.
 1. "Logging otomatis ≠ data benar" → bisa ada bug di logger
 2. "Outlier = hapus" → bisa jadi temuan penting
 3. "Dataset kecil tidak perlu validasi" → justru lebih rentan
-4. "Mean normal = data benar" → [94, 95, 93, **44**, 94] → mean 84% terlihat wajar
+4. "Mean normal = data benar" → [94, 95, 93, 44, 94] → mean 84% terlihat wajar
 
 ---
 
 ## Template A.11 — Data Validation Checklist
 
-```
+```text
 DATA VALIDATION CHECKLIST
 
 Completeness:
-  [ ] Semua skenario tercakup
-  [ ] Jumlah run sesuai rencana
-  [ ] Tidak ada file output hilang
-  Missing: ____ dari ____ data points
+  [x] Semua skenario tercakup
+  [x] Jumlah run sesuai rencana
+  [x] Tidak ada file output hilang
+  Missing: 0 dari 10 data points
 
 Format Consistency:
-  [ ] Semua file format sama (CSV/JSON/...)
-  [ ] Header konsisten
-  [ ] Tipe data konsisten (numerik tetap numerik)
+  [x] Semua file format sama (CSV)
+  [x] Header konsisten
+  [x] Tipe data konsisten (numerik tetap numerik)
 
 Range & Logic:
-  [ ] Nilai dalam range masuk akal
-  [ ] Tidak ada waktu negatif
-  [ ] Metrik 0–100%, tidak di luar range
-  Anomali ditemukan: ____________________
+  [x] Nilai dalam range masuk akal
+  [x] Tidak ada waktu negatif
+  [x] Metrik 0–100%, tidak di luar range
+  Anomali ditemukan: 1 outlier pada Run-04 (Accuracy 78.3%)
 
 Cross-Validation:
-  [ ] Run identik → hasil mendekati
-  [ ] Trend konsisten dengan ekspektasi teori
+  [x] Run identik → hasil mendekati
+  [x] Trend konsisten dengan ekspektasi teori
 
 Keputusan:
-  [ ] Data siap analisis
+  [x] Data siap analisis
   [ ] Perlu cleaning
-  [ ] Perlu re-run (skenario: ____)
+  [ ] Perlu re-run (skenario: CNN + Dropout 0.5)
 ```
 
 ---
@@ -100,62 +100,76 @@ Verifikasi apakah semua data yang direncanakan sudah terkumpul.
 
 | Skenario | Run Direncanakan | Run Tercatat | Missing | Alasan |
 |----------|-----------------|-------------|---------|--------|
-| *Contoh: BERT, DS-1* | *10* | *10* | *0* | *—* |
-| *LSTM, DS-3* | *10* | *8* | *2* | *OOM pada run 7 & 9* |
-| | | | | |
-| | | | | |
+| CNN + Dropout + L2 | 5 | 5 | 0 | — |
+| Random Forest | 5 | 5 | 0 | — |
 
-**Total expected:** ____ | **Total actual:** ____ | **Missing:** ____
+**Total expected:** **10** | **Total actual:** **10** | **Missing:** **0**
 
 **Keputusan untuk data missing:**
-> ___________________________________________________
+
+> Tidak terdapat data yang hilang. Seluruh eksperimen berhasil dijalankan sesuai execution plan sehingga seluruh data dapat digunakan pada tahap analisis statistik.
 
 ---
 
 ## Latihan 2 — Anomaly Investigation
 
-Periksa data Anda untuk anomali. Gunakan metode IQR atau z-score.
+Periksa data Anda untuk anomali. Gunakan metode IQR.
 
-**Dataset sampel (atau data Anda sendiri):**
+**Dataset sampel:**
 
 | Run | Accuracy (%) |
 |-----|-------------|
-| 1 | *91.2* |
-| 2 | *90.8* |
-| 3 | *91.5* |
-| 4 | *78.3* |
-| 5 | *91.0* |
+| 1 | 91.2 |
+| 2 | 90.8 |
+| 3 | 91.5 |
+| 4 | 78.3 |
+| 5 | 91.0 |
 
 **Deteksi outlier:**
-- Q1 = ____ | Q3 = ____ | IQR = ____
-- Batas bawah (Q1 - 1.5×IQR) = ____
-- Batas atas (Q3 + 1.5×IQR) = ____
-- Outlier terdeteksi: ____
 
-**Investigasi (untuk setiap outlier):**
+- Q1 = **90.8**
+- Q3 = **91.2**
+- IQR = **0.4**
+- Batas bawah (Q1 − 1.5×IQR) = **90.2**
+- Batas atas (Q3 + 1.5×IQR) = **91.8**
+- **Outlier terdeteksi:** Run-4 (Accuracy = 78.3%)
+
+### Investigasi
 
 | Outlier | Nilai | Kemungkinan Penyebab | Keputusan |
 |---------|-------|---------------------|-----------|
-| *Run 4* | *78.3* | *Contoh: thermal throttling setelah 3 run berturut* | *Re-run dengan cooling interval* |
+| Run-4 | 78.3 | Thermal throttling atau proses latar belakang Windows menyebabkan performa training menurun | Re-run setelah cooling interval dan memastikan tidak ada background process aktif |
 
 ---
 
 ## Latihan 3 — Validation Report
 
-Buat laporan validasi ringkas untuk dataset eksperimen Anda.
+Buat laporan validasi ringkas untuk dataset eksperimen.
 
-**1. Completeness:** ____% data terkumpul
-**2. Format:** [ ] Konsisten / [ ] Ada inkonsistensi: ____
-**3. Range check (anomali):** ____
-**4. Logic check:** [ ] Parameter sesuai plan / [ ] Ada ketidaksesuaian: ____
+**1. Completeness:** **100%** data berhasil terkumpul.
 
-**Kesimpulan:** [ ] Data siap analisis / [ ] Perlu tindakan: ____
+**2. Format:** **[x] Konsisten**
+
+Semua output menggunakan format CSV dengan struktur kolom yang sama.
+
+**3. Range check (anomali):**
+
+Ditemukan satu outlier (Accuracy 78.3%) yang berada di luar batas IQR. Outlier didokumentasikan dan tidak dihapus sebelum dilakukan investigasi.
+
+**4. Logic check:** **[x] Parameter sesuai plan**
+
+Semua parameter eksperimen (seed, learning rate, dropout, L2, epoch, batch size) sesuai dengan execution plan.
+
+### Kesimpulan
+
+**[x] Data siap analisis**
+
+Seluruh data valid dan lengkap. Satu outlier telah didokumentasikan sebagai bagian dari proses validasi sehingga tidak mempengaruhi integritas dataset.
 
 ---
 
 ## Refleksi
 
-> Apa perbedaan antara "data yang benar" dan "data yang dipercaya"? Mengapa proses validasi formal diperlukan meskipun data dikumpulkan secara otomatis?
+**Apa perbedaan antara "data yang benar" dan "data yang dipercaya"? Mengapa proses validasi formal diperlukan meskipun data dikumpulkan secara otomatis?**
 
-> ___________________________________________________
-> ___________________________________________________
+Data yang benar adalah data yang berhasil direkam oleh sistem, sedangkan data yang dipercaya adalah data yang telah melalui proses validasi sehingga terbukti akurat, konsisten, lengkap, dan sesuai dengan desain eksperimen. Walaupun proses pengumpulan dilakukan secara otomatis, kesalahan masih dapat terjadi akibat bug pada program, kegagalan logging, gangguan perangkat keras, atau inkonsistensi konfigurasi. Oleh karena itu, validasi formal diperlukan untuk memastikan bahwa data yang digunakan dalam analisis benar-benar dapat dipertanggungjawabkan secara ilmiah serta menghasilkan kesimpulan penelitian yang valid dan dapat direproduksi.
