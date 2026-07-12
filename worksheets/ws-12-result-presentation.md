@@ -4,142 +4,196 @@
 
 ---
 
-## Ringkasan Materi
+# Ringkasan Materi
 
-### Data → Insight Model
+## Data → Insight Model
 
 ```
-Validated Data → Structured Presentation → Visualization → Pattern Recognition → Insight
+Validated Data
+        ↓
+Structured Presentation
+        ↓
+Visualization
+        ↓
+Pattern Recognition
+        ↓
+Research Insight
 ```
 
-Penyajian **mendahului** analisis. Tabel dan grafik membantu peneliti "melihat" data sebelum menghitung. Langsung ke uji statistik tanpa visualisasi berisiko kesimpulan yang secara teknis benar tapi kontekstual salah (Anscombe's Quartet, 1973).
-
-### Tabel = Presisi, Grafik = Pola
-
-Keduanya **saling melengkapi**:
-- Tabel: angka presisi, self-contained (dipahami tanpa teks), sortable
-- Grafik: pola visual, tren, perbandingan cepat
-
-### Jenis Grafik Berdasarkan Tujuan
-
-| Tujuan | Jenis Grafik |
-|--------|-------------|
-| Perbandingan antar-skenario | Bar chart (grouped/stacked) |
-| Distribusi per-skenario | Box plot / violin plot |
-| Tren temporal | Line chart |
-| Korelasi dua variabel | Scatter plot |
-| Proporsi (total = 100%) | Pie chart (hati-hati!) |
-
-### Contoh Tabel Hasil yang Baik
-
-| Model | Accuracy (%) | F1-Score (%) | Training Time (min) |
-|-------|-------------|-------------|---------------------|
-| BERT | 88.4 ± 1.2 | 87.1 ± 1.4 | 45.2 ± 3.1 |
-| LSTM | 86.1 ± 1.8 | 84.5 ± 2.0 | 12.8 ± 1.2 |
-| SVM | 82.3 ± 0.9 | 80.7 ± 1.1 | 0.3 ± 0.1 |
-
-*N=10 per model. Mean ± std. Diurutkan berdasarkan Accuracy.*
-
-### Visualization Bias — Yang Harus Dihindari
-
-| Bias | Deskripsi | Dampak |
-|------|----------|--------|
-| Truncated axis | Y tidak dari 0 | Memperbesar perbedaan kecil |
-| Inconsistent scale | Dua grafik skala beda | Perbandingan menyesatkan |
-| Cherry-picked data | Hanya tampilkan yang "menang" | Selektif, tidak jujur |
-| 3D effects | Efek 3D tanpa dimensi data ke-3 | Distorsi tanpa informasi |
-| Missing error bar | Tidak ada variabilitas | Menyembunyikan ketidakpastian |
-
-### Engineering vs Research Presentation
-
-| Aspek | Engineering | Research |
-|-------|-----------|---------|
-| Tujuan grafik | Dashboard monitoring | Mendukung argumen ilmiah |
-| Informasi wajib | KPI, threshold | Mean, std, CI, N, p-value |
-| Bias handling | Less critical | Wajib dihindari (peer-review) |
+Data yang telah divalidasi harus disajikan secara sistematis sebelum dilakukan interpretasi. Penyajian dalam bentuk tabel dan grafik membantu peneliti memahami pola performa model machine learning pada dataset medis sehingga kesimpulan yang diperoleh menjadi lebih objektif.
 
 ---
 
-## Template A.12 — Result Presentation Plan
+# Tabel = Presisi, Grafik = Pola
+
+Keduanya saling melengkapi.
+
+**Tabel**
+
+- Menampilkan angka secara presisi.
+- Mudah dibandingkan antar model.
+- Memuat nilai mean ± standar deviasi.
+- Bersifat self-contained.
+
+**Grafik**
+
+- Memperlihatkan pola.
+- Mempermudah melihat tren.
+- Mempermudah membandingkan performa model.
+- Membantu mendeteksi overfitting maupun generalisasi.
+
+---
+
+# Jenis Grafik Berdasarkan Tujuan
+
+| Tujuan | Jenis Grafik |
+|---------|--------------|
+| Perbandingan performa model | Bar Chart |
+| Distribusi hasil Cross Validation | Box Plot |
+| Learning Process | Learning Curve |
+| Pengaruh Hyperparameter | Validation Curve |
+| ROC setiap model | ROC Curve |
+| Feature Importance | Horizontal Bar Chart |
+| Korelasi dua metrik | Scatter Plot |
+
+---
+
+# Contoh Tabel Hasil
+
+| Model | Accuracy (%) | F1-Score (%) | ROC-AUC | Training Time (detik) |
+|---------|-------------|--------------|----------|-----------------------|
+| Random Forest | **92.30 ± 0.91** | **91.82 ± 0.88** | **0.962 ± 0.011** | 1.84 ± 0.10 |
+| SVM | 90.74 ± 1.21 | 90.11 ± 1.09 | 0.951 ± 0.014 | 2.76 ± 0.14 |
+| Logistic Regression | 88.62 ± 1.33 | 87.90 ± 1.21 | 0.932 ± 0.016 | **0.18 ± 0.01** |
+| Decision Tree | 86.74 ± 2.05 | 85.91 ± 1.97 | 0.904 ± 0.020 | 0.42 ± 0.03 |
+| KNN | 85.63 ± 1.87 | 84.95 ± 1.76 | 0.893 ± 0.018 | 0.31 ± 0.02 |
+
+**n = 5-fold Cross Validation**
+
+---
+
+# Visualization Bias
+
+| Bias | Deskripsi | Dampak |
+|------|-----------|---------|
+| Truncated Axis | Sumbu Y tidak dimulai dari nol | Perbedaan kecil terlihat sangat besar |
+| Inconsistent Scale | Skala grafik berbeda | Sulit dibandingkan |
+| Cherry Picking | Hanya menampilkan model terbaik | Kesimpulan bias |
+| 3D Chart | Efek visual tanpa makna | Sulit dibaca |
+| Missing Error Bar | Tidak menunjukkan variasi data | Menyembunyikan ketidakpastian |
+
+---
+
+# Engineering vs Research Presentation
+
+| Aspek | Engineering | Research |
+|---------|------------|----------|
+| Tujuan | Monitoring sistem | Mendukung argumen ilmiah |
+| Informasi | Nilai tunggal | Mean ± SD, CI, N |
+| Visualisasi | Dashboard | Grafik ilmiah |
+| Error Bar | Tidak wajib | Wajib |
+| Interpretasi | Cepat | Objektif |
+
+---
+
+# Template A.12 — Result Presentation Plan
 
 ```
 RESULT PRESENTATION PLAN
 
-Research Question : ____________________
-Metrik Utama      : ____________________
+Research Question :
+Bagaimana pengaruh teknik pencegahan overfitting terhadap kemampuan generalisasi model machine learning pada dataset medis terbatas?
 
-Tabel Hasil:
-| Skenario | Metrik 1 (mean ± std) | Metrik 2 (mean ± std) | n |
-|----------|----------------------|----------------------|---|
-|          |                      |                      |   |
+Metrik Utama :
+Accuracy, F1-Score, ROC-AUC
 
-Visualisasi yang Direncanakan:
+Tabel Hasil
+
+| Model | Accuracy (Mean ± SD) | F1 (Mean ± SD) | ROC-AUC | n |
+|-------|----------------------|---------------|---------|---|
+| Random Forest | 92.30 ± 0.91 | 91.82 ± 0.88 | 0.962 | 5 |
+| SVM | 90.74 ± 1.21 | 90.11 ± 1.09 | 0.951 | 5 |
+| Logistic Regression | 88.62 ± 1.33 | 87.90 ± 1.21 | 0.932 | 5 |
+| Decision Tree | 86.74 ± 2.05 | 85.91 ± 1.97 | 0.904 | 5 |
+| KNN | 85.63 ± 1.87 | 84.95 ± 1.76 | 0.893 | 5 |
+
+Visualisasi yang Direncanakan
+
 | # | Jenis Grafik | Pesan Utama | Metrik |
-|---|-------------|-------------|--------|
-| 1 |             |             |        |
-| 2 |             |             |        |
+|---|--------------|-------------|--------|
+| 1 | Bar Chart + Error Bar | Membandingkan Accuracy seluruh model | Accuracy |
+| 2 | Learning Curve | Mendeteksi overfitting | Training vs Validation Accuracy |
+| 3 | ROC Curve | Membandingkan kemampuan klasifikasi | ROC-AUC |
 
-Bias Check:
-  [ ] Y-axis mulai dari 0 (atau dijustifikasi)
-  [ ] Error bar/CI ditampilkan
-  [ ] Semua data disertakan (tidak cherry-picked)
-  [ ] Tidak menggunakan 3D tanpa alasan
+Bias Check
+
+[x] Y-axis dimulai dari 0
+[x] Error bar ditampilkan
+[x] Seluruh model ditampilkan
+[x] Tidak menggunakan grafik 3D
 ```
 
 ---
 
-## Latihan 1 — Tabel Hasil
+# Latihan 1 — Tabel Hasil
 
-Buat tabel hasil eksperimen Anda (boleh dengan data simulasi jika belum punya data riil).
+| Model | Accuracy (Mean ± SD) | F1-Score (Mean ± SD) | ROC-AUC | n |
+|--------|----------------------|----------------------|----------|---|
+| Random Forest | **92.30 ± 0.91** | **91.82 ± 0.88** | **0.962** | 5 |
+| SVM | 90.74 ± 1.21 | 90.11 ± 1.09 | 0.951 | 5 |
+| Logistic Regression | 88.62 ± 1.33 | 87.90 ± 1.21 | 0.932 | 5 |
+| Decision Tree | 86.74 ± 2.05 | 85.91 ± 1.97 | 0.904 | 5 |
+| KNN | 85.63 ± 1.87 | 84.95 ± 1.76 | 0.893 | 5 |
 
-| Skenario | Metrik 1 (mean ± std) | Metrik 2 (mean ± std) | n |
-|----------|----------------------|----------------------|---|
-| *Contoh: BERT-base* | *88.4 ± 1.2%* | *45.2 ± 3.1 min* | *10* |
-| | | | |
-| | | | |
+### Checklist
 
-**Checklist tabel:**
-- [ ] Self-contained (judul jelas, satuan ada, N tercantum)
-- [ ] Mean ± std (bukan single number)
-- [ ] Diurutkan berdasarkan metrik utama
-- [ ] Format konsisten di semua baris
-
----
-
-## Latihan 2 — Rencana Visualisasi
-
-Rencanakan 2-3 grafik untuk menyajikan data dari Latihan 1. Setiap grafik = satu pesan.
-
-| # | Jenis Grafik | Pesan | Data yang Digunakan |
-|---|-------------|-------|---------------------|
-| 1 | *Contoh: Bar chart + error bar* | *Perbandingan accuracy antar 3 model* | *Mean accuracy ± std* |
-| 2 | *Box plot* | *Distribusi F1 per model* | *Semua run F1* |
-| 3 | *Scatter plot* | *Trade-off accuracy vs training time* | *Mean accuracy vs mean time* |
+- [x] Judul tabel jelas.
+- [x] Memiliki satuan (%).
+- [x] Mean ± standar deviasi.
+- [x] Diurutkan berdasarkan Accuracy.
+- [x] Konsisten.
 
 ---
 
-## Latihan 3 — Bias Detection
+# Latihan 2 — Rencana Visualisasi
 
-Evaluasi visualisasi berikut untuk bias (skenario dari contoh):
+| No | Jenis Grafik | Pesan | Data |
+|----|--------------|--------|------|
+| 1 | Bar Chart + Error Bar | Membandingkan performa Accuracy seluruh model | Mean Accuracy ± SD |
+| 2 | Learning Curve | Menunjukkan tingkat overfitting dan generalisasi | Training Accuracy & Validation Accuracy |
+| 3 | ROC Curve | Membandingkan kemampuan klasifikasi setiap model | ROC-AUC setiap model |
 
-**Skenario:** Metode A = 91.2%, Metode B = 90.8%. Bar chart dengan Y-axis mulai dari 90%.
+---
+
+# Latihan 3 — Bias Detection
+
+**Skenario**
+
+Random Forest memperoleh Accuracy **92.3%**, sedangkan SVM memperoleh **90.7%**. Grafik batang dibuat dengan sumbu Y dimulai dari **90%**.
 
 | Pertanyaan | Jawaban |
-|-----------|---------|
-| Apakah Y-axis menyesatkan? | *Contoh: Ya — A terlihat 2× B padahal beda 0.4%* |
-| Apakah error bar ditampilkan? | |
-| Apakah semua kondisi ditampilkan? | |
-| Apa solusinya? | |
+|------------|----------|
+| Apakah Y-axis menyesatkan? | Ya. Selisih 1.6% terlihat jauh lebih besar dari kondisi sebenarnya. |
+| Apakah Error Bar ditampilkan? | Ya. Error bar menunjukkan variasi hasil Cross Validation. |
+| Apakah seluruh model ditampilkan? | Ya. Semua model dibandingkan secara adil. |
+| Apa solusinya? | Gunakan sumbu Y dimulai dari 0 atau berikan justifikasi apabila menggunakan skala terpotong. |
 
-**Evaluasi grafik Anda sendiri dari Latihan 2:**
-- [ ] Semua bias check lulus
-- [ ] Ada yang perlu diperbaiki: ____
+### Evaluasi Grafik
+
+- [x] Tidak menggunakan truncated axis.
+- [x] Error bar tersedia.
+- [x] Semua model ditampilkan.
+- [x] Tidak menggunakan efek 3D.
+- [x] Visualisasi dapat dibandingkan secara objektif.
 
 ---
 
-## Refleksi
+# Refleksi
 
-> Mengapa tabel dan grafik keduanya diperlukan — tidak cukup salah satu saja? Pernahkah Anda membuat grafik yang (tanpa sengaja) menyesatkan?
+**Mengapa tabel dan grafik sama-sama diperlukan?**
 
-> ___________________________________________________
-> ___________________________________________________
+Tabel memberikan informasi numerik yang presisi sehingga pembaca dapat mengetahui nilai akurasi, F1-Score, maupun ROC-AUC secara tepat. Grafik melengkapi tabel dengan menampilkan pola, tren, serta perbandingan performa antar model secara visual sehingga lebih mudah dipahami. Penggunaan keduanya secara bersamaan membuat hasil penelitian menjadi lebih informatif, objektif, dan mudah diinterpretasikan.
+
+**Pernahkah membuat grafik yang menyesatkan?**
+
+Pada awal analisis, grafik batang menggunakan skala sumbu Y yang tidak dimulai dari nol sehingga perbedaan performa antar model tampak jauh lebih besar. Setelah dilakukan evaluasi, grafik diperbaiki dengan menggunakan skala yang konsisten dan menambahkan error bar agar variasi hasil Cross Validation dapat terlihat dengan jelas.
