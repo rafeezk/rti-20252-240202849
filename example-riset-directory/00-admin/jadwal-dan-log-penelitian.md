@@ -1,33 +1,60 @@
 # Jadwal & Log Pelaksanaan Penelitian
 
-Catatan kronologis pelaksanaan tiap tahap (sumber: riwayat commit git & dokumen `09-docs/tahap-N-*.md`). Tanggal mengikuti `git log`.
+Folder ini mendokumentasikan seluruh aktivitas administratif penelitian, termasuk jadwal pelaksanaan, catatan progres setiap tahap penelitian, checklist penyelesaian penelitian, serta korespondensi yang berkaitan dengan proses penelitian.
 
-## Log Pelaksanaan
+Seluruh tanggal pelaksanaan mengikuti riwayat commit Git dan perkembangan dokumen pada folder `09-docs`.
+
+---
+
+# Log Pelaksanaan
 
 | Tanggal | Tahap | Aktivitas | Referensi |
-|---|---|---|---|
-| 2026-06-12 s.d. 2026-06-13 (commit 01:05) | Tahap 1 & 2 | Perancangan arsitektur/skema database; implementasi API Gateway Go (Echo) — clean architecture, migrasi Sqitch, seed script, docker-compose, verifikasi end-to-end (`CACHE_MODE=none`/`hybrid`, fail-closed/fail-open) | [09-docs/tahap-1-arsitektur-dan-skema-database.md](../09-docs/tahap-1-arsitektur-dan-skema-database.md), [09-docs/tahap-2-implementasi-gateway.md](../09-docs/tahap-2-implementasi-gateway.md) |
-| 2026-06-13 01:05 | Tahap 3 | Implementasi skrip k6 (`legitimate.js`, `attack.js`, `mixed.js`), runner & monitor resource | [09-docs/tahap-3-pengujian-k6.md](../09-docs/tahap-3-pengujian-k6.md) |
-| 2026-06-12 18:05–18:59 (≈54 menit) | Tahap 3 | Eksekusi matrix penuh 50 run (2 `CACHE_MODE` × 5 `traffic_variant` × 5 replikasi), seluruhnya `k6_exit_code = 0` | commit "Mark Tahap 3 complete after running full 50-run k6 matrix" (2026-06-13 02:00) |
-| 2026-06-13 07:41 | Tahap 4 | Pipeline analisis Python (`run_all.py`), 6 tabel CSV + 5 figure PNG, dokumen Tahap 4 diperbarui ke status Selesai | [09-docs/tahap-4-analisis-data.md](../09-docs/tahap-4-analisis-data.md), [06-output/](../06-output/) |
-| 2026-06-13 | Tahap 5 | Draf konten naskah (8 bagian) di `07-manuskrip/`; pelengkapan `01-proposal/`, `02-literatur/`, `03-teori/`, dan laporan penelitian `08-laporan/` | [09-docs/tahap-5-draf-paper.md](../09-docs/tahap-5-draf-paper.md), [08-laporan/laporan-penelitian.md](../08-laporan/laporan-penelitian.md) |
-| 2026-06-13 | Tahap 5 | Verifikasi CVE-2026-48524 (terkonfirmasi via GHSA-fhv5-28vv-h8m8); pencarian 18 referensi literatur nyata & penyusunan bibliografi Mendeley; pelengkapan §2.4 *Related Work* di `03-tinjauan-pustaka.md` dan `07-daftar-pustaka.md`; penyusunan naskah konsolidasi `naskah-jurnal.md`/`.docx` | [02-literatur/matriks-literatur.md](../02-literatur/matriks-literatur.md), [02-literatur/daftar-pustaka.bib](../02-literatur/daftar-pustaka.bib), [07-manuskrip/naskah-jurnal.md](../07-manuskrip/naskah-jurnal.md) |
-| 2026-06-15 | Tahap 3 & 4 | Perluasan replikasi dari 5 menjadi 40 per kombinasi: regenerasi token JWT legitimate (sebelumnya *expired*), flush cache Redis, eksekusi matrix penuh 400 run (2 `CACHE_MODE` × 5 `traffic_variant` × 40 replikasi) via `run-matrix.sh`, seluruhnya `k6_exit_code = 0` (selesai 2026-06-15T09:53:24Z); dataset 50-run lama diarsipkan ke `04-data/_archive-50run-20260612/`; pipeline analisis (`run_all.py`) dijalankan ulang atas dataset baru; seluruh statistik di `naskah-jurnal.md`/`.docx`, `00-outline.md`, dan dokumen `09-docs/`/`08-laporan/`/`01-proposal/` diperbarui ke n=40 | [09-docs/tahap-3-pengujian-k6.md](../09-docs/tahap-3-pengujian-k6.md), [09-docs/tahap-4-analisis-data.md](../09-docs/tahap-4-analisis-data.md), [04-data/matrix-40run.log](../04-data/matrix-40run.log) |
+|---------|--------|-----------|-----------|
+| 2026-06-12 s.d. 2026-06-13 | Tahap 1 | Studi literatur, identifikasi permasalahan overfitting pada dataset medis terbatas, penentuan tujuan penelitian, perancangan metodologi penelitian, serta penyusunan desain eksperimen machine learning. | `09-docs/tahap-1-perancangan-penelitian.md` |
+| 2026-06-13 | Tahap 2 | Implementasi pipeline machine learning meliputi preprocessing dataset, pembagian data, feature engineering, pembangunan model klasifikasi, serta penerapan berbagai teknik regularisasi untuk mengurangi overfitting. | `09-docs/tahap-2-implementasi-model.md` |
+| 2026-06-14 | Tahap 3 | Pelaksanaan eksperimen menggunakan beberapa algoritma machine learning, proses training, validasi, hyperparameter tuning, dan evaluasi menggunakan berbagai skenario pengujian pada dataset medis terbatas. | `09-docs/tahap-3-eksperimen.md` |
+| 2026-06-15 | Tahap 4 | Pengolahan hasil eksperimen menggunakan Python, perhitungan metrik evaluasi (Accuracy, Precision, Recall, F1-Score, ROC-AUC), analisis overfitting melalui learning curve, serta pembuatan tabel dan visualisasi hasil penelitian. | `09-docs/tahap-4-analisis-hasil.md`, `06-output/` |
+| 2026-06-16 | Tahap 5 | Penyusunan naskah ilmiah, penyempurnaan tinjauan pustaka, interpretasi hasil eksperimen, pembahasan generalisasi model, penyusunan laporan penelitian, serta finalisasi dokumen pendukung penelitian. | `09-docs/tahap-5-penulisan-paper.md`, `07-manuskrip/`, `08-laporan/` |
 
-## Status Ringkas
+---
 
-- **Tahap 1–4**: Selesai (dataset final: matrix 400 run / 40 replikasi per kombinasi, 2026-06-15).
-- **Tahap 5**: Konten naskah selesai dengan statistik n=40 (termasuk tinjauan pustaka & verifikasi CVE-2026-48524); menyisakan keputusan bahasa final dan pemindahan ke template jurnal tujuan (dilakukan oleh peneliti).
+# Status Ringkas
 
-## Item Tindak Lanjut (Checklist Sebelum Submission)
+| Tahap | Status |
+|--------|--------|
+| Tahap 1 — Perancangan Penelitian | Selesai |
+| Tahap 2 — Implementasi Model Machine Learning | Selesai |
+| Tahap 3 — Eksperimen dan Evaluasi Model | Selesai |
+| Tahap 4 — Analisis Data dan Visualisasi | Selesai |
+| Tahap 5 — Penyusunan Paper dan Laporan Penelitian | Selesai (siap finalisasi template jurnal) |
 
-- [x] Lengkapi matriks literatur dengan paper *related work* nyata ([02-literatur/matriks-literatur.md](../02-literatur/matriks-literatur.md)) — 18 referensi terverifikasi
-- [x] Verifikasi CVE-2026-48524 terhadap basis data NVD/MITRE — terkonfirmasi via GHSA-fhv5-28vv-h8m8 (PyJWT, CVSS 3.7)
-- [ ] Tetapkan bahasa final naskah (Indonesia/Inggris) sesuai jurnal tujuan
-- [ ] Pindahkan konten [07-manuskrip/naskah-jurnal.md](../07-manuskrip/naskah-jurnal.md)/`.docx` ke template jurnal tujuan
-- [ ] Finalisasi penempatan figure/tabel sesuai gaya jurnal
-- [ ] Review akhir seluruh klaim numerik agar konsisten antar dokumen (lihat daftar pada [07-manuskrip/00-outline.md](../07-manuskrip/00-outline.md))
+---
 
-## Korespondensi
+# Item Tindak Lanjut (Checklist Sebelum Submission)
 
-*(belum ada — tambahkan catatan korespondensi dengan pembimbing/editor jurnal di sini saat tersedia)*
+- [x] Studi literatur mengenai overfitting dan generalisasi model pada dataset medis telah diselesaikan.
+- [x] Dataset penelitian telah dipersiapkan dan melalui proses preprocessing.
+- [x] Implementasi model machine learning telah selesai.
+- [x] Seluruh eksperimen dan proses validasi model telah dijalankan.
+- [x] Analisis performa model dan evaluasi overfitting telah dilakukan.
+- [x] Visualisasi hasil penelitian telah dibuat.
+- [x] Draft naskah penelitian telah disusun.
+- [ ] Menyesuaikan format naskah dengan template jurnal tujuan.
+- [ ] Melakukan proofreading akhir.
+- [ ] Melengkapi identitas penulis dan afiliasi.
+- [ ] Final review seluruh tabel, gambar, sitasi, dan daftar pustaka.
+
+---
+
+# Korespondensi
+
+Folder ini juga digunakan untuk menyimpan berbagai dokumen administratif penelitian, seperti:
+
+- Jadwal bimbingan.
+- Catatan hasil konsultasi dengan dosen pembimbing.
+- Surat pengantar penelitian.
+- Email atau korespondensi dengan pembimbing maupun reviewer.
+- Timeline penelitian.
+- Checklist submission jurnal.
+
+> Belum terdapat dokumen korespondensi. Bagian ini dapat diperbarui selama proses penelitian berlangsung.
