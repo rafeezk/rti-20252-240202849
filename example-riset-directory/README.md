@@ -1,42 +1,44 @@
-# [EXAMPLE] JWKS Flooding — Penelitian Mitigasi JWKS Endpoint Flooding
+# 09-docs
 
-**Judul:** Performance and Security Evaluation of Mitigating JWKS Endpoint Flooding on Microservices Gateway Using Redis-PostgreSQL Hybrid Caching
+Dokumen perencanaan, roadmap, dan panduan pelaksanaan penelitian.
 
-**Target publikasi:** Sinta 2 (Jurnal RESTI/Telematika) atau Scopus Q3-Q4
+Folder ini berisi seluruh dokumen yang digunakan sebagai acuan selama penelitian, mulai dari tahap perancangan penelitian, implementasi model machine learning, pelaksanaan eksperimen, analisis hasil, hingga penyusunan naskah ilmiah.
 
-## Ringkasan
+## Isi
 
-Penelitian ini mengevaluasi mitigasi celah keamanan **JWKS Endpoint Flooding** (mirip CVE-2026-48524) — di mana penyerang membanjiri API Gateway dengan JWT ber-`kid` (Key ID) acak sehingga resolver JWKS melakukan kueri tak terbatas ke Identity Service/database, menyebabkan resource exhaustion. Solusi yang diuji adalah skema **Redis-PostgreSQL Hybrid Caching** (positive & negative cache) dengan rate-limiting pada lookup kunci, diimplementasikan pada API Gateway berbasis Go (Echo).
+- `rencana-penelitian.md` — indeks utama penelitian dan roadmap lima tahap penelitian.
+- `tahap-1-perancangan-penelitian.md` — perancangan penelitian, dataset, preprocessing, dan desain eksperimen.
+- `tahap-2-implementasi-model.md` — implementasi pipeline machine learning.
+- `tahap-3-pengujian-model.md` — pelaksanaan eksperimen dan evaluasi model.
+- `tahap-4-analisis-data.md` — analisis hasil eksperimen dan visualisasi.
+- `tahap-5-draf-paper.md` — penyusunan naskah ilmiah.
 
-Detail lengkap topik & roadmap: [09-docs/rencana-penelitian.md](09-docs/rencana-penelitian.md)
+## Keterkaitan
 
-## Struktur Direktori
+Dokumen pada folder ini menjadi acuan utama seluruh folder penelitian.
 
-| Folder | Isi |
-|---|---|
-| [00-admin/](00-admin/) | Administrasi penelitian (jadwal, korespondensi) |
-| [01-proposal/](01-proposal/) | Proposal penelitian |
-| [02-literatur/](02-literatur/) | Referensi & paper terkait (Tinjauan Pustaka) |
-| [03-teori/](03-teori/) | Arsitektur & desain sistem (Tahap 1) |
-| [04-data/](04-data/) | Data mentah hasil pengujian k6 & metrik container |
-| [05-kode/](05-kode/) | Source code: API Gateway (Go) & skrip k6 (Tahap 2 & 3) |
-| [06-output/](06-output/) | Statistik & visualisasi hasil pengujian (Tahap 4) |
-| [07-manuskrip/](07-manuskrip/) | Draf naskah jurnal (Tahap 5) |
-| [08-laporan/](08-laporan/) | Laporan progres/akhir penelitian |
-| [09-docs/](09-docs/) | Dokumen perencanaan & roadmap tahap-tahap penelitian |
+| Folder | Kegunaan |
+|---------|----------|
+| `00-admin/` | administrasi penelitian |
+| `01-proposal/` | proposal penelitian |
+| `02-literatur/` | tinjauan pustaka |
+| `03-teori/` | landasan teori |
+| `04-data/` | dataset penelitian |
+| `05-kode/` | implementasi machine learning |
+| `06-output/` | hasil eksperimen |
+| `07-manuskrip/` | penulisan paper |
+| `08-laporan/` | laporan penelitian |
 
-## Status Tahapan
+## Roadmap Penelitian
 
-- [x] **Tahap 1** — Perancangan Arsitektur & Skema Database — *Selesai* ([detail](09-docs/tahap-1-arsitektur-dan-skema-database.md))
-- [x] **Tahap 2** — Implementasi API Gateway (Go) — *Selesai* ([detail](09-docs/tahap-2-implementasi-gateway.md))
-- [x] **Tahap 3** — Skrip Pengujian k6 (Legitimate vs Attack Traffic) — *Selesai* ([detail](09-docs/tahap-3-pengujian-k6.md))
-- [x] **Tahap 4** — Ekstraksi Data & Visualisasi — *Selesai* ([detail](09-docs/tahap-4-analisis-data.md))
-- [ ] **Tahap 5** — Draf Paper Jurnal — *Sedang berjalan* ([detail](09-docs/tahap-5-draf-paper.md))
+Tahapan penelitian terdiri atas lima tahap utama.
 
-## Laporan Penelitian
+- Tahap 1 — Perancangan Penelitian
+- Tahap 2 — Implementasi Model Machine Learning
+- Tahap 3 — Pengujian dan Evaluasi Model
+- Tahap 4 — Analisis Hasil Eksperimen
+- Tahap 5 — Penyusunan Draf Paper
 
-Laporan penelitian komprehensif (ringkasan eksekutif, metodologi per tahap, hasil, kendala, kesimpulan): [08-laporan/laporan-penelitian.md](08-laporan/laporan-penelitian.md)
+## Status
 
-## Author
-
-Helmi Bahar
+Dokumen pada folder ini diperbarui secara bertahap mengikuti perkembangan penelitian.
