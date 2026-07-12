@@ -1,51 +1,85 @@
-# Tahap 2 — Implementasi Model Machine Learning
+# 02-literatur
 
-Status: Selesai
+Folder ini berisi seluruh referensi ilmiah yang digunakan sebagai landasan teoritis dan pendukung penelitian, khususnya pada penyusunan Tinjauan Pustaka (Tahap 5).
 
-Lokasi kode:
+Seluruh literatur yang dikumpulkan digunakan untuk membangun dasar ilmiah mengenai permasalahan overfitting pada dataset medis berukuran terbatas, berbagai teknik peningkatan generalisasi model machine learning, serta penelitian-penelitian terdahulu yang relevan dengan prediksi penyakit.
 
-../05-kode/
+## Topik Referensi yang Relevan
 
-## Tujuan
+Literatur pada folder ini difokuskan pada beberapa topik utama berikut.
 
-Mengimplementasikan seluruh pipeline machine learning sesuai rancangan penelitian.
+- Machine Learning untuk prediksi penyakit.
+- Overfitting pada dataset medis berukuran kecil.
+- Generalisasi model machine learning.
+- Teknik regularisasi (L1, L2, Dropout, Early Stopping).
+- Feature Selection dan Feature Engineering.
+- Data balancing dan penanganan ketidakseimbangan kelas.
+- Cross Validation dan Stratified Cross Validation.
+- Ensemble Learning.
+- Evaluasi model klasifikasi.
+- Penelitian terdahulu mengenai prediksi penyakit menggunakan machine learning.
 
-## Deliverable
+## Isi yang Diharapkan
 
-- Import dataset
-- Data preprocessing
-- Feature engineering
-- Data splitting
-- Training model
-- Hyperparameter tuning
-- Cross Validation
-- Penyimpanan model
+Folder ini berisi berbagai sumber literatur yang digunakan selama penelitian, antara lain:
 
-## Struktur Implementasi
+- Artikel ilmiah dari jurnal internasional maupun nasional.
+- Conference proceedings.
+- Buku referensi.
+- Dokumentasi resmi library machine learning.
+- Ringkasan paper.
+- Catatan hasil studi literatur.
+- Matriks perbandingan penelitian terdahulu.
+- Bibliografi dalam format BibTeX atau RIS.
 
-Pipeline terdiri atas:
+Seluruh referensi digunakan sebagai dasar penyusunan Bab Tinjauan Pustaka pada naskah penelitian.
 
-- preprocessing.py
-- train.py
-- evaluate.py
-- utils.py
+## Berkas
 
-## Model
+Folder ini direncanakan memiliki beberapa dokumen utama sebagai berikut.
 
-- Logistic Regression
-- Decision Tree
-- Random Forest
-- SVM
-- KNN
+- `matriks-literatur.md` — matriks literatur yang memetakan penelitian terdahulu berdasarkan metode, dataset, algoritma, evaluasi, kelebihan, kekurangan, dan research gap.
+- `daftar-pustaka.bib` — bibliografi BibTeX yang siap diimpor ke Mendeley, Zotero, atau aplikasi reference manager lainnya.
+- `ringkasan-paper/` — kumpulan ringkasan setiap paper yang telah dipelajari.
+- `annotasi/` — catatan penting dan hasil analisis setiap referensi.
 
-## Output
+## Fungsi Literatur
 
-- Model terlatih
-- Confusion Matrix
-- Classification Report
-- ROC Curve
-- Feature Importance
+Literatur pada folder ini digunakan untuk:
+
+- Menjelaskan konsep dasar machine learning.
+- Menjelaskan konsep overfitting dan underfitting.
+- Menjelaskan konsep generalisasi model.
+- Menjelaskan teknik validasi model menggunakan Cross Validation.
+- Menjelaskan metode evaluasi klasifikasi.
+- Mengidentifikasi research gap dari penelitian sebelumnya.
+- Mendukung penyusunan metodologi penelitian.
+- Menjadi dasar pembahasan hasil penelitian.
+
+## Keterkaitan dengan Folder Lain
+
+Dokumen pada folder ini berhubungan langsung dengan beberapa folder penelitian lainnya.
+
+- `../01-proposal/` — digunakan sebagai dasar penyusunan proposal penelitian.
+- `../03-teori/` — menjadi landasan teori dan konsep penelitian.
+- `../07-manuskrip/` — digunakan sebagai sumber sitasi pada bagian Tinjauan Pustaka.
+- `../08-laporan/` — menjadi referensi dalam penyusunan laporan penelitian.
+
+## Acuan
+
+Seluruh proses studi literatur mengacu pada dokumen perencanaan penelitian berikut.
+
+- `../09-docs/rencana-penelitian.md`
+- `../09-docs/tahap-5-draf-paper.md`
 
 ## Status
 
-Implementasi pipeline machine learning telah selesai.
+Status studi literatur saat ini:
+
+- Topik penelitian telah ditentukan.
+- Literatur mengenai machine learning dan prediksi penyakit telah dikumpulkan.
+- Literatur mengenai overfitting dan generalisasi model telah dipelajari.
+- Penelitian terdahulu telah diidentifikasi.
+- Research gap telah dirumuskan.
+- Matriks literatur sedang/disusun sebagai dasar penulisan tinjauan pustaka.
+- Bibliografi disiapkan dalam format BibTeX untuk mempermudah sitasi pada naskah penelitian.
